@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', currentView: 'home', sideMenuOpen: false, userLoggedIn: localStorage.getItem('userLoggedIn') === 'true', userName: localStorage.getItem('userName') || 'Narayana', userEmail: localStorage.getItem('userEmail') || 'narayana@gmail.com', userAvatar: localStorage.getItem('userAvatar') || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80', profileDropdown: false, showAd: !localStorage.getItem('adShown'), selectedCity: localStorage.getItem('userCity') || 'Kadapa' }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROPX - Find Your Dream Property in Kadapa</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for interactive reactivity -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -23,378 +26,512 @@
         }
     </script>
     <style>
-        /* Custom accent line matching your preferred 1-3% pineapple yellow highlight */
         .accent-border-top {
             border-top: 4px solid #FFC107;
         }
+        /* Card Reflection Effect */
+        .reflection-card {
+            position: relative;
+        }
+        .reflection-card::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background: linear-gradient(to bottom, rgba(255,193,7,0.15), transparent);
+            transform: scaleY(-1);
+            opacity: 0.6;
+            pointer-events: none;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased pb-16 md:pb-0">
+<body class="bg-gray-50 dark:bg-slate-950 text-gray-800 dark:text-gray-100 font-sans antialiased pb-20 md:pb-0 transition-colors duration-300">
 
-    <!-- TOP HEADER NAVBAR -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            
-            <!-- Logo & Tagline -->
-            <div class="flex items-center space-x-3">
-                <div class="bg-propYellow p-2 rounded-xl text-propDark shadow-md flex items-center justify-center">
-                    <i class="fa-solid fa-house-chimney text-2xl"></i>
+    <!-- FIRST TIME CITY POPUP AD -->
+    <div x-show="showAd" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" x-transition.opacity>
+        <div class="relative w-full max-w-md rounded-3xl overflow-hidden shadow-2xl bg-cover bg-center border border-white/20" style="background-image: linear-gradient(to bottom, rgba(10,25,47,0.85), rgba(10,25,47,0.95)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80');">
+            <div class="p-8 text-white text-center">
+                <div class="w-16 h-16 mx-auto bg-propYellow text-propDark rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-lg">
+                    <i class="fa-solid fa-location-dot"></i>
                 </div>
-                <div>
-                    <span class="text-2xl font-ext500 tracking-tight font-black text-propDark">PROP<span class="text-propYellow">X</span></span>
-                    <p class="text-[10px] text-gray-500 font-medium tracking-wide">Your Property, Your Place, Your Choice.</p>
-                </div>
-            </div>
+                <h2 class="text-2xl font-black">Welcome to PROPX!</h2>
+                <p class="text-xs text-gray-300 mt-2">Please select your preferred city to get personalized property recommendations.</p>
+                
+                <div class="mt-6 space-y-3">
+                    <select x-model="selectedCity" class="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-propYellow">
+                        <option class="bg-propDark text-white" value="Kadapa">Kadapa</option>
+                        <option class="bg-propDark text-white" value="Proddatur">Proddatur</option>
+                        <option class="bg-propDark text-white" value="Jammalamadugu">Jammalamadugu</option>
+                        <option class="bg-propDark text-white" value="Pulivendla">Pulivendla</option>
+                        <option class="bg-propDark text-white" value="Mydukur">Mydukur</option>
+                    </select>
 
-            <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold text-gray-700">
-                <a href="#" class="text-propDark bg-propYellow/20 px-3 py-1.5 rounded-lg">Home</a>
-                <a href="#" class="hover:text-propYellow transition flex items-center gap-1">All Properties <i class="fa-solid fa-chevron-down text-xs"></i></a>
-                <a href="#" class="hover:text-propYellow transition flex items-center gap-1">Categories <i class="fa-solid fa-chevron-down text-xs"></i></a>
-                <a href="#" class="hover:text-propYellow transition">About</a>
-                <a href="#" class="hover:text-propYellow transition">Contact</a>
-            </nav>
-
-            <!-- Right Actions (Wishlist & Auth) -->
-            <div class="hidden md:flex items-center space-x-4">
-                <button class="text-gray-600 hover:text-red-500 text-xl transition">
-                    <i class="fa-regular fa-heart"></i>
-                </button>
-                <button class="bg-propYellow hover:bg-propYellowLight text-propDark font-bold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
-                    <i class="fa-solid fa-user"></i> Login / Register
-                </button>
-            </div>
-
-            <!-- Mobile Menu Trigger -->
-            <div class="md:hidden flex items-center space-x-3">
-                <button class="text-gray-700 text-2xl focus:outline-none">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- HERO SECTION WITH BACKGROUND IMAGE -->
-    <section class="relative bg-propDark text-white py-16 lg:py-24 overflow-hidden">
-        <!-- Background Overlay Image -->
-        <div class="absolute inset-0 opacity-30 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80');"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-propDark via-propDark/80 to-transparent"></div>
-
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-2xl">
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                    Find Your Dream <br>Property in <span class="text-propYellow">Kadapa</span>
-                </h1>
-                <p class="mt-4 text-base sm:text-lg text-gray-200">
-                    Houses, Flats, Shops, Commercial Spaces and Lands - All in One Place.
-                </p>
-
-                <!-- Value Badges -->
-                <div class="mt-6 flex flex-wrap gap-4 text-sm font-medium">
-                    <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md">
-                        <i class="fa-solid fa-circle-check text-propYellow"></i> Trusted Listings
-                    </div>
-                    <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md">
-                        <i class="fa-solid fa-bolt text-propYellow"></i> Direct Connect
-                    </div>
-                    <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md">
-                        <i class="fa-solid fa-shield-heart text-propYellow"></i> No Buyer Charges
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FLOATING SEARCH BAR -->
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
-        <div class="bg-white rounded-2xl shadow-xl p-4 border border-gray-100 accent-border-top">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-                <!-- Dropdown Category -->
-                <div class="md:col-span-4 border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between bg-gray-50">
-                    <div class="flex items-center gap-3 text-gray-700">
-                        <i class="fa-solid fa-house-laptop text-propYellow"></i>
-                        <span class="text-sm font-semibold">All Properties</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
-                </div>
-
-                <!-- Input Keyword Search -->
-                <div class="md:col-span-4 border border-gray-200 rounded-xl px-4 py-3 flex items-center gap-3 bg-gray-50">
-                    <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-                    <input type="text" placeholder="Search for houses, flats, shops..." class="w-full bg-transparent text-sm focus:outline-none text-gray-700">
-                </div>
-
-                <!-- Location Selector -->
-                <div class="md:col-span-2 border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between bg-gray-50">
-                    <div class="flex items-center gap-2 text-gray-700">
-                        <i class="fa-solid fa-location-dot text-red-500"></i>
-                        <span class="text-sm font-semibold">Kadapa</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="md:col-span-2">
-                    <button class="w-full bg-propYellow hover:bg-propYellowLight text-propDark font-bold py-3.5 px-6 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
-                        <i class="fa-solid fa-magnifying-glass"></i> Search
+                    <button @click="localStorage.setItem('userCity', selectedCity); localStorage.setItem('adShown', 'true'); showAd = false;" class="w-full bg-propYellow hover:bg-propYellowLight text-propDark font-extrabold py-3 rounded-xl shadow-lg transition">
+                        Continue
+                    </button>
+                    
+                    <button @click="localStorage.setItem('adShown', 'true'); showAd = false;" class="text-xs text-gray-400 hover:text-white underline transition block mx-auto pt-2">
+                        Skip for now
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- CATEGORIES GRID SECTION -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+    <!-- TOP HEADER NAVBAR -->
+    <header class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-40 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Category Card 1 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 group cursor-pointer">
-                <div class="w-12 h-12 mx-auto bg-yellow-50 text-propYellow rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                    <i class="fa-solid fa-house"></i>
-                </div>
-                <h3 class="font-bold text-gray-800 text-sm">Houses</h3>
-                <p class="text-[11px] text-gray-500 mt-0.5">(for Rent / Sale)</p>
+            <!-- Logo Image Link -->
+            <div class="flex items-center space-x-3 cursor-pointer" @click="currentView = 'home'">
+                <img src="https://i.ibb.co/6R05Lz6Q/1000283253.png" alt="PROPX Logo" class="h-10 sm:h-12 w-auto object-contain">
             </div>
 
-            <!-- Category Card 2 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 group cursor-pointer">
-                <div class="w-12 h-12 mx-auto bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                    <i class="fa-solid fa-building"></i>
-                </div>
-                <h3 class="font-bold text-gray-800 text-sm">Apartments</h3>
-                <p class="text-[11px] text-gray-500 mt-0.5">(for Rent / Sale)</p>
-            </div>
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold text-gray-700 dark:text-gray-200">
+                <a href="#" @click="currentView = 'home'" :class="{ 'text-propDark dark:text-propYellow bg-propYellow/20 px-3 py-1.5 rounded-lg': currentView === 'home' }" class="hover:text-propYellow transition">Home</a>
+                <a href="#" class="hover:text-propYellow transition flex items-center gap-1">All Properties <i class="fa-solid fa-chevron-down text-xs"></i></a>
+                <a href="#" class="hover:text-propYellow transition flex items-center gap-1">Categories <i class="fa-solid fa-chevron-down text-xs"></i></a>
+                <a href="#" class="hover:text-propYellow transition">About</a>
+                <a href="#" class="hover:text-propYellow transition">Contact</a>
+            </nav>
 
-            <!-- Category Card 3 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 group cursor-pointer">
-                <div class="w-12 h-12 mx-auto bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                    <i class="fa-solid fa-bed"></i>
-                </div>
-                <h3 class="font-bold text-gray-800 text-sm">Hotel Rooms</h3>
-                <p class="text-[11px] text-gray-500 mt-0.5">(For Rent)</p>
-            </div>
+            <!-- Right Actions (Dark Mode, Wishlist & Auth) -->
+            <div class="hidden md:flex items-center space-x-4">
+                <!-- Dark Mode Toggle Button (No Text) -->
+                <button @click="darkMode = !darkMode" class="p-2.5 rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-yellow-400 hover:scale-105 transition shadow-sm">
+                    <i :class="darkMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon'" class="text-lg"></i>
+                </button>
 
-            <!-- Category Card 4 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 group cursor-pointer">
-                <div class="w-12 h-12 mx-auto bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                    <i class="fa-solid fa-store"></i>
-                </div>
-                <h3 class="font-bold text-gray-800 text-sm">Shops</h3>
-                <p class="text-[11px] text-gray-500 mt-0.5">(for Rent / Sale)</p>
-            </div>
+                <button class="text-gray-600 dark:text-gray-300 hover:text-red-500 text-xl transition">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
 
-            <!-- Category Card 5 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 group cursor-pointer">
-                <div class="w-12 h-12 mx-auto bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                    <i class="fa-solid fa-city"></i>
-                </div>
-                <h3 class="font-bold text-gray-800 text-sm">Commercial</h3>
-                <p class="text-[11px] text-gray-500 mt-0.5">(Offices & Spaces)</p>
-            </div>
-
-            <!-- Category Card 6 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 group cursor-pointer">
-                <div class="w-12 h-12 mx-auto bg-green-50 text-green-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                    <i class="fa-solid fa-mountain-sun"></i>
-                </div>
-                <h3 class="font-bold text-gray-800 text-sm">Lands / Plots</h3>
-                <p class="text-[11px] text-gray-500 mt-0.5">(For Rent / Sale)</p>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- FEATURED PROPERTIES SECTION -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-6 bg-propYellow rounded-full"></div>
-                <h2 class="text-xl sm:text-2xl font-bold text-propDark">Featured Properties</h2>
-            </div>
-            <a href="#" class="text-blue-600 hover:text-blue-800 font-semibold text-sm flex items-center gap-1 transition">
-                View All Properties <i class="fa-solid fa-arrow-right text-xs"></i>
-            </a>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <!-- Property Card 1 -->
-            <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 overflow-hidden flex flex-col justify-between">
-                <div>
-                    <div class="relative h-52">
-                        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80" alt="Independent House" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-propYellow text-propDark font-bold text-xs px-3 py-1 rounded-lg shadow">For Sale</span>
-                        <button class="absolute top-3 right-3 bg-white/80 hover:bg-white p-2 rounded-full text-gray-700 shadow transition">
-                            <i class="fa-regular fa-heart"></i>
+                <!-- Dynamic Auth Section -->
+                <div class="relative" x-data="{ dropdownOpen: false }">
+                    <template x-if="!userLoggedIn">
+                        <button @click="userLoggedIn = true; localStorage.setItem('userLoggedIn', 'true')" class="bg-propYellow hover:bg-propYellowLight text-propDark font-bold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-user"></i> Login with Google
                         </button>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="font-bold text-gray-900 text-base">Independent House</h3>
-                        <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                            <i class="fa-solid fa-location-dot text-red-500"></i> Kadapa
-                        </p>
-                        <div class="mt-4 text-lg font-extrabold text-propDark">
-                            ₹ 65,00,000
+                    </template>
+                    <template x-if="userLoggedIn">
+                        <div>
+                            <button @click="dropdownOpen = !dropdownOpen" class="flex items-center gap-2 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 p-1.5 pr-4 rounded-full transition border border-gray-200 dark:border-slate-700">
+                                <img :src="userAvatar" alt="Profile" class="w-8 h-8 rounded-full object-cover">
+                                <span class="text-xs font-bold text-gray-800 dark:text-gray-200" x-text="userName"></span>
+                                <i class="fa-solid fa-chevron-down text-[10px] text-gray-500"></i>
+                            </button>
+
+                            <!-- Profile Small Bar Dropdown -->
+                            <div x-show="dropdownOpen" @click.outside="dropdownOpen = false" class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-2xl shadow-xl py-2 border border-gray-100 dark:border-slate-700 z-50" x-transition>
+                                <div class="px-4 py-2 border-b border-gray-100 dark:border-slate-700">
+                                    <p class="text-xs font-bold text-gray-800 dark:text-gray-100" x-text="userName"></p>
+                                    <p class="text-[10px] text-gray-500 truncate" x-text="userEmail"></p>
+                                </div>
+                                <button @click="userLoggedIn = false; localStorage.removeItem('userLoggedIn'); dropdownOpen = false;" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center gap-2 transition">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="px-5 pb-5 pt-0">
-                    <button class="w-full bg-gray-50 hover:bg-propYellow/10 text-propDark border border-gray-200 hover:border-propYellow font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                        View Details <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </button>
+                    </template>
                 </div>
             </div>
 
-            <!-- Property Card 2 -->
-            <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 overflow-hidden flex flex-col justify-between">
-                <div>
-                    <div class="relative h-52">
-                        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80" alt="2 BHK Flat" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-propYellow text-propDark font-bold text-xs px-3 py-1 rounded-lg shadow">For Rent</span>
-                        <button class="absolute top-3 right-3 bg-white/80 hover:bg-white p-2 rounded-full text-gray-700 shadow transition">
-                            <i class="fa-regular fa-heart"></i>
-                        </button>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="font-bold text-gray-900 text-base">2 BHK Flat</h3>
-                        <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                            <i class="fa-solid fa-location-dot text-red-500"></i> Kadapa
-                        </p>
-                        <div class="mt-4 text-lg font-extrabold text-propDark">
-                            ₹ 12,000 <span class="text-xs text-gray-500 font-normal">/ Month</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="px-5 pb-5 pt-0">
-                    <button class="w-full bg-gray-50 hover:bg-propYellow/10 text-propDark border border-gray-200 hover:border-propYellow font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                        View Details <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Property Card 3 -->
-            <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 overflow-hidden flex flex-col justify-between">
-                <div>
-                    <div class="relative h-52">
-                        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80" alt="Deluxe Room" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-propYellow text-propDark font-bold text-xs px-3 py-1 rounded-lg shadow">For Rent</span>
-                        <button class="absolute top-3 right-3 bg-white/80 hover:bg-white p-2 rounded-full text-gray-700 shadow transition">
-                            <i class="fa-regular fa-heart"></i>
-                        </button>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="font-bold text-gray-900 text-base">Deluxe Room</h3>
-                        <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                            <i class="fa-solid fa-location-dot text-red-500"></i> Kadapa
-                        </p>
-                        <div class="mt-4 text-lg font-extrabold text-propDark">
-                            ₹ 1,500 <span class="text-xs text-gray-500 font-normal">/ Night</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="px-5 pb-5 pt-0">
-                    <button class="w-full bg-gray-50 hover:bg-propYellow/10 text-propDark border border-gray-200 hover:border-propYellow font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                        View Details <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- STATS & CALL-TO-ACTION BANNER -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div class="bg-propDark rounded-3xl p-6 sm:p-8 text-white grid grid-cols-1 lg:grid-cols-12 gap-6 items-center shadow-xl">
-            
-            <!-- Stats items -->
-            <div class="lg:col-span-8 grid grid-cols-3 gap-4 text-center divide-x divide-gray-700">
-                <div>
-                    <div class="text-2xl sm:text-3xl font-extrabold text-propYellow">1000+</div>
-                    <div class="text-xs text-gray-300 mt-1">Happy Customers</div>
-                </div>
-                <div>
-                    <div class="text-2xl sm:text-3xl font-extrabold text-propYellow">500+</div>
-                    <div class="text-xs text-gray-300 mt-1">Properties Listed</div>
-                </div>
-                <div>
-                    <div class="text-lg sm:text-2xl font-extrabold text-propYellow flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-location-dot text-sm text-red-400"></i> Kadapa
-                    </div>
-                    <div class="text-xs text-gray-300 mt-1">Our Focus District</div>
-                </div>
-            </div>
-
-            <!-- CTA Action Button -->
-            <div class="lg:col-span-4 flex justify-center lg:justify-end">
-                <button class="w-full sm:w-auto bg-propYellow hover:bg-propYellowLight text-propDark font-bold px-6 py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-3 text-sm">
-                    <div>
-                        <div class="text-left font-black">List Your Property Today</div>
-                        <div class="text-[10px] text-gray-800 font-normal">Reach more customers in Kadapa</div>
-                    </div>
-                    <i class="fa-solid fa-arrow-right text-lg"></i>
+            <!-- Mobile Menu Trigger -->
+            <div class="md:hidden flex items-center space-x-3">
+                <button @click="darkMode = !darkMode" class="p-2 rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-yellow-400">
+                    <i :class="darkMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon'" class="text-base"></i>
+                </button>
+                <button @click="sideMenuOpen = true" class="text-gray-700 dark:text-gray-200 text-2xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
-
         </div>
-    </section>
+    </header>
 
-    <!-- FOOTER -->
-    <footer class="bg-propDark text-gray-400 py-12 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            
-            <!-- Footer Logo -->
-            <div class="flex items-center space-x-3">
-                <div class="bg-propYellow p-2 rounded-xl text-propDark shadow-md flex items-center justify-center">
-                    <i class="fa-solid fa-house-chimney text-xl"></i>
-                </div>
+    <!-- SIDE MENU DRAWER (Mobile & Desktop) -->
+    <div x-show="sideMenuOpen" class="fixed inset-0 z-50 overflow-hidden" x-transition.opacity>
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-xs" @click="sideMenuOpen = false"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-80 bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col justify-between">
                 <div>
-                    <span class="text-xl font-black text-white">PROP<span class="text-propYellow">X</span></span>
-                    <p class="text-[10px] text-gray-400">Your Property, Your Place, Your Choice.</p>
+                    <div class="flex items-center justify-between pb-6 border-b border-gray-100 dark:border-slate-800">
+                        <img src="https://i.ibb.co/6R05Lz6Q/1000283253.png" alt="Logo" class="h-8">
+                        <button @click="sideMenuOpen = false" class="text-gray-500 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                    <div class="mt-6 space-y-4">
+                        <a href="#" @click="currentView = 'home'; sideMenuOpen = false" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">Home</a>
+                        <a href="#" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">All Properties</a>
+                        <a href="#" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">Categories</a>
+                        <a href="#" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">About Us</a>
+                        <a href="#" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">Contact</a>
+                    </div>
+                </div>
+
+                <!-- Side Menu Auth Footer -->
+                <div class="pt-6 border-t border-gray-100 dark:border-slate-800">
+                    <template x-if="!userLoggedIn">
+                        <button @click="userLoggedIn = true; localStorage.setItem('userLoggedIn', 'true'); sideMenuOpen = false;" class="w-full bg-propYellow text-propDark font-bold py-3 rounded-xl shadow flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-user"></i> Login with Google
+                        </button>
+                    </template>
+                    <template x-if="userLoggedIn">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 bg-gray-50 dark:bg-slate-800 p-3 rounded-xl">
+                                <img :src="userAvatar" class="w-10 h-10 rounded-full object-cover">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800 dark:text-gray-100" x-text="userName"></p>
+                                    <p class="text-[10px] text-gray-500 truncate" x-text="userEmail"></p>
+                                </div>
+                            </div>
+                            <button @click="userLoggedIn = false; localStorage.removeItem('userLoggedIn'); sideMenuOpen = false;" class="w-full bg-red-50 dark:bg-red-950/30 text-red-600 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main>
+        <!-- HOME VIEW -->
+        <div x-show="currentView === 'home'">
+            <!-- HERO SECTION WITH BACKGROUND IMAGE -->
+            <section class="relative bg-propDark text-white py-16 lg:py-24 overflow-hidden">
+                <div class="absolute inset-0 opacity-30 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-propDark via-propDark/80 to-transparent"></div>
+
+                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-2xl">
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                            Find Your Dream <br>Property in <span class="text-propYellow" x-text="selectedCity"></span>
+                        </h1>
+                        <p class="mt-4 text-base sm:text-lg text-gray-200">
+                            Houses, Flats, Shops, Commercial Spaces and Lands - All in One Place.
+                        </p>
+
+                        <!-- Value Badges -->
+                        <div class="mt-6 flex flex-wrap gap-4 text-sm font-medium">
+                            <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md">
+                                <i class="fa-solid fa-circle-check text-propYellow"></i> Trusted Listings
+                            </div>
+                            <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md">
+                                <i class="fa-solid fa-bolt text-propYellow"></i> Direct Connect
+                            </div>
+                            <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md">
+                                <i class="fa-solid fa-shield-heart text-propYellow"></i> No Buyer Charges
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FLOATING SEARCH BAR -->
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-30">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-4 border border-gray-100 dark:border-slate-800 accent-border-top">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                        <div class="md:col-span-4 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 flex items-center justify-between bg-gray-50 dark:bg-slate-800">
+                            <div class="flex items-center gap-3 text-gray-700 dark:text-gray-200">
+                                <i class="fa-solid fa-house-laptop text-propYellow"></i>
+                                <span class="text-sm font-semibold">All Properties</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                        </div>
+
+                        <div class="md:col-span-4 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 flex items-center gap-3 bg-gray-50 dark:bg-slate-800">
+                            <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                            <input type="text" placeholder="Search for houses, flats, shops..." class="w-full bg-transparent text-sm focus:outline-none text-gray-700 dark:text-gray-200">
+                        </div>
+
+                        <div class="md:col-span-2 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 flex items-center justify-between bg-gray-50 dark:bg-slate-800">
+                            <div class="flex items-center gap-2 text-gray-700 dark:text-gray-200">
+                                <i class="fa-solid fa-location-dot text-red-500"></i>
+                                <span class="text-sm font-semibold" x-text="selectedCity"></span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <button class="w-full bg-propYellow hover:bg-propYellowLight text-propDark font-bold py-3.5 px-6 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
+                                <i class="fa-solid fa-magnifying-glass"></i> Search
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Footer Links -->
+            <!-- CATEGORIES GRID SECTION -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card">
+                        <div class="w-12 h-12 mx-auto bg-yellow-50 dark:bg-slate-800 text-propYellow rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-house"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Houses</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">(for Rent / Sale)</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card">
+                        <div class="w-12 h-12 mx-auto bg-blue-50 dark:bg-slate-800 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-building"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Apartments</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">(for Rent / Sale)</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card">
+                        <div class="w-12 h-12 mx-auto bg-indigo-50 dark:bg-slate-800 text-indigo-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-bed"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Hotel Rooms</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">(For Rent)</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card">
+                        <div class="w-12 h-12 mx-auto bg-orange-50 dark:bg-slate-800 text-orange-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Shops</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">(for Rent / Sale)</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card">
+                        <div class="w-12 h-12 mx-auto bg-teal-50 dark:bg-slate-800 text-teal-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-city"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Commercial</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">(Offices & Spaces)</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card">
+                        <div class="w-12 h-12 mx-auto bg-green-50 dark:bg-slate-800 text-green-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-mountain-sun"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Lands / Plots</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">(For Rent / Sale)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FEATURED PROPERTIES SECTION -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1.5 h-6 bg-propYellow rounded-full"></div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-propDark dark:text-white">Featured Properties</h2>
+                    </div>
+                    <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline font-semibold text-sm flex items-center gap-1 transition">
+                        View All Properties <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Property 1 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-800 overflow-hidden flex flex-col justify-between reflection-card">
+                        <div>
+                            <div class="relative h-52">
+                                <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80" alt="Independent House" class="w-full h-full object-cover">
+                                <span class="absolute top-3 left-3 bg-propYellow text-propDark font-bold text-xs px-3 py-1 rounded-lg shadow">For Sale</span>
+                                <button class="absolute top-3 right-3 bg-white/80 dark:bg-slate-800 p-2 rounded-full text-gray-700 dark:text-gray-200 shadow transition">
+                                    <i class="fa-regular fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-gray-900 dark:text-white text-base">Independent House</h3>
+                                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-location-dot text-red-500"></i> <span x-text="selectedCity"></span>
+                                </p>
+                                <div class="mt-4 text-lg font-extrabold text-propDark dark:text-propYellow">
+                                    ₹ 65,00,000
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-5 pb-5 pt-0">
+                            <button class="w-full bg-gray-50 dark:bg-slate-800 hover:bg-propYellow/10 text-propDark dark:text-gray-200 border border-gray-200 dark:border-slate-700 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
+                                View Details <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Property 2 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-800 overflow-hidden flex flex-col justify-between reflection-card">
+                        <div>
+                            <div class="relative h-52">
+                                <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80" alt="2 BHK Flat" class="w-full h-full object-cover">
+                                <span class="absolute top-3 left-3 bg-propYellow text-propDark font-bold text-xs px-3 py-1 rounded-lg shadow">For Rent</span>
+                                <button class="absolute top-3 right-3 bg-white/80 dark:bg-slate-800 p-2 rounded-full text-gray-700 dark:text-gray-200 shadow transition">
+                                    <i class="fa-regular fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-gray-900 dark:text-white text-base">2 BHK Flat</h3>
+                                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-location-dot text-red-500"></i> <span x-text="selectedCity"></span>
+                                </p>
+                                <div class="mt-4 text-lg font-extrabold text-propDark dark:text-propYellow">
+                                    ₹ 12,000 <span class="text-xs text-gray-500 font-normal">/ Month</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-5 pb-5 pt-0">
+                            <button class="w-full bg-gray-50 dark:bg-slate-800 hover:bg-propYellow/10 text-propDark dark:text-gray-200 border border-gray-200 dark:border-slate-700 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
+                                View Details <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Property 3 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-800 overflow-hidden flex flex-col justify-between reflection-card">
+                        <div>
+                            <div class="relative h-52">
+                                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80" alt="Deluxe Room" class="w-full h-full object-cover">
+                                <span class="absolute top-3 left-3 bg-propYellow text-propDark font-bold text-xs px-3 py-1 rounded-lg shadow">For Rent</span>
+                                <button class="absolute top-3 right-3 bg-white/80 dark:bg-slate-800 p-2 rounded-full text-gray-700 dark:text-gray-200 shadow transition">
+                                    <i class="fa-regular fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-gray-900 dark:text-white text-base">Deluxe Room</h3>
+                                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-location-dot text-red-500"></i> <span x-text="selectedCity"></span>
+                                </p>
+                                <div class="mt-4 text-lg font-extrabold text-propDark dark:text-propYellow">
+                                    ₹ 1,500 <span class="text-xs text-gray-500 font-normal">/ Night</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-5 pb-5 pt-0">
+                            <button class="w-full bg-gray-50 dark:bg-slate-800 hover:bg-propYellow/10 text-propDark dark:text-gray-200 border border-gray-200 dark:border-slate-700 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
+                                View Details <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STATS & CTA -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+                <div class="bg-propDark rounded-3xl p-6 sm:p-8 text-white grid grid-cols-1 lg:grid-cols-12 gap-6 items-center shadow-xl">
+                    <div class="lg:col-span-8 grid grid-cols-3 gap-4 text-center divide-x divide-gray-700">
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-propYellow">1000+</div>
+                            <div class="text-xs text-gray-300 mt-1">Happy Customers</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-propYellow">500+</div>
+                            <div class="text-xs text-gray-300 mt-1">Properties Listed</div>
+                        </div>
+                        <div>
+                            <div class="text-lg sm:text-2xl font-extrabold text-propYellow flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-location-dot text-sm text-red-400"></i> <span x-text="selectedCity"></span>
+                            </div>
+                            <div class="text-xs text-gray-300 mt-1">Our Focus Region</div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-4 flex justify-center lg:justify-end">
+                        <button class="w-full sm:w-auto bg-propYellow hover:bg-propYellowLight text-propDark font-bold px-6 py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-3 text-sm">
+                            <div>
+                                <div class="text-left font-black">List Your Property Today</div>
+                                <div class="text-[10px] text-gray-800 font-normal">Reach more customers locally</div>
+                            </div>
+                            <i class="fa-solid fa-arrow-right text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- TERMS & CONDITIONS PAGE -->
+        <div x-show="currentView === 'terms'" class="max-w-4xl mx-auto px-4 py-12">
+            <div class="flex items-center gap-4 mb-8">
+                <button @click="currentView = 'home'" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-700 dark:text-gray-200 hover:bg-propYellow hover:text-propDark transition">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h1 class="text-2xl font-black">Terms & Conditions</h1>
+            </div>
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-slate-800 space-y-4 text-sm text-gray-600 dark:text-gray-300">
+                <p>Welcome to PROPX. By accessing our website, you agree to comply with and be bound by the following terms and conditions.</p>
+                <h2 class="font-bold text-gray-900 dark:text-white pt-2">1. Use of Service</h2>
+                <p>Users must provide accurate information when registering or listing properties. Fraudulent listings or misuse will lead to immediate account termination.</p>
+                <h2 class="font-bold text-gray-900 dark:text-white pt-2">2. Property Listings</h2>
+                <p>All property descriptions, prices, and locations are provided by third-party listers or owners. PROPX acts as an intermediary platform and does not guarantee absolute ownership verification.</p>
+                <h2 class="font-bold text-gray-900 dark:text-white pt-2">3. Limitation of Liability</h2>
+                <p>PROPX shall not be held liable for any direct or indirect financial losses arising from transactions between buyers and sellers.</p>
+            </div>
+        </div>
+
+        <!-- PRIVACY POLICY PAGE -->
+        <div x-show="currentView === 'privacy'" class="max-w-4xl mx-auto px-4 py-12">
+            <div class="flex items-center gap-4 mb-8">
+                <button @click="currentView = 'home'" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-700 dark:text-gray-200 hover:bg-propYellow hover:text-propDark transition">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h1 class="text-2xl font-black">Privacy Policy</h1>
+            </div>
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-slate-800 space-y-4 text-sm text-gray-600 dark:text-gray-300">
+                <p>At PROPX, we respect your privacy and are committed to protecting your personal data.</p>
+                <h2 class="font-bold text-gray-900 dark:text-white pt-2">1. Information We Collect</h2>
+                <p>We collect basic profile info when you sign in via Google (such as your name, email address, and avatar) along with your preferred city location.</p>
+                <h2 class="font-bold text-gray-900 dark:text-white pt-2">2. How We Use Information</h2>
+                <p>Your data is utilized solely to personalize property recommendations, streamline direct connections with listers, and manage session authentication.</p>
+                <h2 class="font-bold text-gray-900 dark:text-white pt-2">3. Data Security</h2>
+                <p>We implement robust client-side storage security measures to ensure your session remains secure and private.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-propDark text-gray-400 py-12 border-t border-gray-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3 cursor-pointer" @click="currentView = 'home'">
+                <img src="https://i.ibb.co/6R05Lz6Q/1000283253.png" alt="Logo" class="h-10">
+            </div>
+
             <div class="flex flex-wrap justify-center gap-6 text-xs font-medium text-gray-300">
-                <a href="#" class="hover:text-propYellow transition">Home</a>
+                <a href="#" @click="currentView = 'home'" class="hover:text-propYellow transition">Home</a>
                 <a href="#" class="hover:text-propYellow transition">All Properties</a>
                 <a href="#" class="hover:text-propYellow transition">About</a>
                 <a href="#" class="hover:text-propYellow transition">Contact</a>
-                <a href="#" class="hover:text-propYellow transition">Privacy Policy</a>
-                <a href="#" class="hover:text-propYellow transition">Terms & Conditions</a>
+                <a href="#" @click="currentView = 'privacy'" class="hover:text-propYellow transition">Privacy Policy</a>
+                <a href="#" @click="currentView = 'terms'" class="hover:text-propYellow transition">Terms & Conditions</a>
             </div>
 
-            <!-- Socials -->
             <div class="flex items-center space-x-4 text-sm">
                 <span class="text-xs text-gray-400">Follow Us:</span>
                 <a href="#" class="w-8 h-8 rounded-full bg-gray-800 hover:bg-propYellow hover:text-propDark flex items-center justify-center transition"><i class="fa-brands fa-whatsapp"></i></a>
                 <a href="#" class="w-8 h-8 rounded-full bg-gray-800 hover:bg-propYellow hover:text-propDark flex items-center justify-center transition"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#" class="w-8 h-8 rounded-full bg-gray-800 hover:bg-propYellow hover:text-propDark flex items-center justify-center transition"><i class="fa-brands fa-facebook-f"></i></a>
             </div>
-
         </div>
     </footer>
 
-    <!-- MOBILE BOTTOM NAVIGATION BAR (Matches design smartphone view) -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-2 px-6 flex justify-between items-center z-50 shadow-lg">
-        <a href="#" class="flex flex-col items-center text-propYellow text-xs font-semibold">
+    <!-- MOBILE BOTTOM NAVIGATION BAR -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 py-2 px-6 flex justify-between items-center z-40 shadow-lg">
+        <a href="#" @click="currentView = 'home'" :class="currentView === 'home' ? 'text-propYellow' : 'text-gray-500 dark:text-gray-400'" class="flex flex-col items-center text-xs font-semibold transition">
             <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px] mt-0.5">Home</span>
         </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 hover:text-propYellow text-xs font-semibold">
+        <a href="#" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-propYellow text-xs font-semibold">
             <i class="fa-solid fa-magnifying-glass text-lg"></i>
             <span class="text-[10px] mt-0.5">Search</span>
         </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 hover:text-propYellow text-xs font-semibold">
+        <a href="#" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-propYellow text-xs font-semibold">
             <i class="fa-regular fa-heart text-lg"></i>
             <span class="text-[10px] mt-0.5">Favorites</span>
         </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 hover:text-propYellow text-xs font-semibold">
+        <a href="#" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-propYellow text-xs font-semibold">
             <i class="fa-regular fa-bell text-lg"></i>
             <span class="text-[10px] mt-0.5">Alerts</span>
         </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 hover:text-propYellow text-xs font-semibold">
+        <a href="#" @click="if(!userLoggedIn) { userLoggedIn = true; localStorage.setItem('userLoggedIn', 'true'); }" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-propYellow text-xs font-semibold">
             <i class="fa-regular fa-user text-lg"></i>
-            <span class="text-[10px] mt-0.5">Profile</span>
+            <span class="text-[10px] mt-0.5" x-text="userLoggedIn ? 'Profile' : 'Login'"></span>
         </a>
     </div>
 
