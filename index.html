@@ -1,643 +1,458 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ 
-    darkMode: localStorage.getItem('darkMode') === 'true', 
-    currentView: 'home', 
-    selectedProperty: null,
-    sideMenuOpen: false, 
-    userLoggedIn: localStorage.getItem('userLoggedIn') === 'true', 
-    userName: localStorage.getItem('userName') || '', 
-    userEmail: localStorage.getItem('userEmail') || '', 
-    userAvatar: localStorage.getItem('userAvatar') || '', 
-    profileDropdown: false, 
-    showAd: !localStorage.getItem('adShown'), 
-    cityInput: localStorage.getItem('userCity') || 'Kadapa',
-    connectOwnerModal: false,
-    enquirySuccessModal: false,
-    activeImageIdx: 0
-}" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))" :class="{ 'dark': darkMode }">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROPX - Find Your Dream Property</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js for reactivity -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- FontAwesome for Icons -->
+    <title>RentSpot - Landing Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        propYellow: '#FFC107',
-                        propYellowLight: '#FFD700',
-                        propDark: '#0A192F',
-                        propBlue: '#1E3A8A'
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        .accent-border-top {
-            border-top: 4px solid #FFC107;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
-        /* Hide scrollbar for clean swipeable rows */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .reflection-card {
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             position: relative;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
-        .reflection-card::after {
-            content: "";
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            padding: 24px 20px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- LANDING PAGE STYLES --- */
+        .illustration-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            background: linear-gradient(135deg, #eef4f8 0%, #e0edf5 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 25px;
+        }
+
+        .illustration-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Blinking Location Pin Effect */
+        @keyframes blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.1); }
+        }
+
+        .blink-pin {
             position: absolute;
-            bottom: -15px;
-            left: 0;
-            right: 0;
-            height: 15px;
-            background: linear-gradient(to bottom, rgba(255,193,7,0.15), transparent);
-            transform: scaleY(-1);
-            opacity: 0.6;
-            pointer-events: none;
+            top: 25px;
+            left: 52%;
+            transform: translateX(-50%);
+            background: #ffcc00;
+            color: #0b2545;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            animation: blink 1.2s infinite ease-in-out;
+            font-size: 16px;
+        }
+
+        .brand-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-img {
+            width: 220px;
+            max-width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0b2545;
+            margin-bottom: 6px;
+        }
+
+        .sub-tagline {
+            font-size: 13px;
+            color: #6c757d;
+            margin-bottom: 25px;
+        }
+
+        /* Category Icons */
+        .categories {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            text-align: center;
+            background: #fffdf0;
+            border: 1px solid #ffeeba;
+            padding: 15px 10px;
+            border-radius: 16px;
+            width: 30%;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.1);
+        }
+
+        .category-card i {
+            font-size: 22px;
+            color: #ffb703;
+            margin-bottom: 8px;
+        }
+
+        .category-card span {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #0b2545;
+        }
+
+        /* Bl
+        inking Let's Go Button */
+        @keyframes btnBlink {
+            0%, 100% { box-shadow: 0 6px 20px rgba(255, 183, 3, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 2px 10px rgba(255, 183, 3, 0.2); transform: scale(0.98); }
+        }
+
+        .lets-go-btn {
+            background: #ffb703;
+            color: #0b2545;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 35px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: btnBlink 1.5s infinite ease-in-out;
+            transition: background 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .lets-go-btn:hover {
+            background: #fb8500;
+            color: #fff;
+        }
+
+        .footer-terms {
+            font-size: 10px;
+            text-align: center;
+            color: #8d99ae;
+            line-height: 1.4;
+            padding: 0 10px;
+        }
+
+        .footer-terms a {
+            color: #0077b6;
+            text-decoration: none;
+        }
+
+        /* --- HOME PAGE STYLES --- */
+        .home-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-greeting h2 {
+            font-size: 18px;
+            color: #0b2545;
+        }
+
+        .user-greeting p {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .back-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b2545;
+            font-size: 16px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0b2545;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .property-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            max-height: calc(100vh - 220px);
+            padding-bottom: 20px;
+        }
+
+        .property-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .property-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .property-details {
+            padding: 12px 15px;
+        }
+
+        .property-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0b2545;
+        }
+
+        .property-location {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .property-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fb8500;
+        }
+
+        .badge {
+            background: #e0f2fe;
+            color: #0284c7;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
         }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-slate-950 text-gray-800 dark:text-gray-100 font-sans antialiased pb-20 md:pb-0 transition-colors duration-300">
+<body>
 
-    <!-- REAL GOOGLE LOGIN SIMULATION FUNCTION -->
-    <script>
-        function loginWithGoogle(component) {
-            // Opens official Google Auth Account chooser simulation window or popup
-            const width = 500, height = 600;
-            const left = (window.innerWidth - width) / 2;
-            const top = (window.innerHeight - height) / 2;
-            
-            // Simulating Google OAuth popup experience with real profile response parsing
-            const googleAuthWindow = window.open("https://accounts.google.com/o/oauth2/v2/auth/identifier?client_id=placeholder", "Google Login", `width=${width},height=${height},top=${top},left=${left}`);
-            
-            // For seamless frontend execution without server callback blocks, we trigger direct secure OAuth mock profile capture:
-            setTimeout(() => {
-                if (googleAuthWindow) googleAuthWindow.close();
-                // Fetch user mock/real profile info from Google sign-in session
-                component.userName = "Chenna Narayana";
-                component.userEmail = "narayana.propx@gmail.com";
-                component.userAvatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80";
-                component.userLoggedIn = true;
-                
-                localStorage.setItem('userLoggedIn', 'true');
-                localStorage.setItem('userName', component.userName);
-                localStorage.setItem('userEmail', component.userEmail);
-                localStorage.setItem('userAvatar', component.userAvatar);
-            }, 1200);
-        }
-    </script>
-
-    <!-- FIRST TIME CITY POPUP AD -->
-    <div x-show="showAd" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" x-transition.opacity>
-        <div class="relative w-full max-w-md rounded-3xl overflow-hidden shadow-2xl bg-cover bg-center border border-white/20" style="background-image: linear-gradient(to bottom, rgba(10,25,47,0.85), rgba(10,25,47,0.95)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80');">
-            <div class="p-8 text-white text-center">
-                <div class="w-16 h-16 mx-auto bg-propYellow text-propDark rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-lg">
-                    <i class="fa-solid fa-location-dot"></i>
+    <div class="app-container">
+        
+        <!-- LANDING PAGE SCREEN -->
+        <div id="landingScreen" class="screen active">
+            <!-- Illustration with conversation and blinking location pin -->
+            <div class="illustration-container">
+                <!-- Blinking Location Pin matching image reference -->
+                <div class="blink-pin">
+                    <i class="fa-solid fa-house"></i>
                 </div>
-                <h2 class="text-2xl font-black">Welcome to PROPX!</h2>
-                <p class="text-xs text-gray-300 mt-2">Enter your city to get precise local property listings.</p>
-                
-                <div class="mt-6 space-y-3">
-                    <!-- Enterable City Input -->
-                    <input type="text" x-model="cityInput" placeholder="Enter your city (e.g., Kadapa)" class="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-propYellow text-center font-bold">
+                <!-- Illustration Image representing the conversation between two people[span_3](start_span)[span_3](end_span) -->
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80" alt="Conversation Illustration" class="illustration-img">
+            </div>
 
-                    <button @click="localStorage.setItem('userCity', cityInput); localStorage.setItem('adShown', 'true'); showAd = false;" class="w-full bg-propYellow hover:bg-propYellowLight text-propDark font-extrabold py-3 rounded-xl shadow-lg transition">
-                        Continue
-                    </button>
-                    
-                    <button @click="localStorage.setItem('adShown', 'true'); showAd = false;" class="text-xs text-gray-400 hover:text-white underline transition block mx-auto pt-2">
-                        Skip
-                    </button>
+            <div class="brand-section">
+                <!-- Logo text/image representation -->
+                <h1 style="color: #0b2545; font-size: 28px; font-weight: 800;"><i class="fa-solid fa-house-chimney" style="color: #ffb703;"></i> Rent<span style="color: #ffb703;">spot</span></h1>
+                <p style="font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 1px; margin-top: 2px;">FIND • RENT • LIVE BETTER</p>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 class="tagline">Find Your Perfect Space</h2>
+                <p class="sub-tagline">Rent homes, offices and more – easily!</p>
+            </div>
+
+            <!-- Categories -->
+            <div class="categories">
+                <div class="category-card">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Homes</span>
                 </div>
+                <div class="category-card">
+                    <i class="fa-solid fa-building"></i>
+                    <span>Offices</span>
+                </div>
+                <div class="category-card">
+                    <i class="fa-solid fa-store"></i>
+                    <span>Shops</span>
+                </div>
+            </div>
+
+            <!-- Blinking Let's Go Button -->
+            <button class="lets-go-btn" id="letsGoBtn">
+                Let's Go <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <div class="footer-terms">
+                By continuing, you agree to our <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a><br>
+                By continuing, you agree to be contacted by us and our authorized representatives
             </div>
         </div>
-    </div>
 
-    <!-- TOP HEADER NAVBAR -->
-    <header class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-40 transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            
-            <!-- Logo Image Link -->
-            <div class="flex items-center space-x-3 cursor-pointer" @click="currentView = 'home'">
-                <img src="https://i.ibb.co/6R05Lz6Q/1000283253.png" alt="PROPX Logo" class="h-10 sm:h-12 w-auto object-contain">
-            </div>
-
-            <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold text-gray-700 dark:text-gray-200">
-                <a href="#" @click="currentView = 'home'" :class="{ 'text-propDark dark:text-propYellow bg-propYellow/20 px-3 py-1.5 rounded-lg': currentView === 'home' }" class="hover:text-propYellow transition">Home</a>
-                <a href="#" class="hover:text-propYellow transition flex items-center gap-1">All Properties <i class="fa-solid fa-chevron-down text-xs"></i></a>
-                <a href="#" class="hover:text-propYellow transition flex items-center gap-1">Categories <i class="fa-solid fa-chevron-down text-xs"></i></a>
-                <a href="#" class="hover:text-propYellow transition">About</a>
-                <a href="#" class="hover:text-propYellow transition">Contact</a>
-            </nav>
-
-            <!-- Right Actions -->
-            <div class="hidden md:flex items-center space-x-4">
-                <!-- Dark Mode Toggle Button (No Text) -->
-                <button @click="darkMode = !darkMode" class="p-2.5 rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-yellow-400 hover:scale-105 transition shadow-sm">
-                    <i :class="darkMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon'" class="text-lg"></i>
-                </button>
-
-                <button class="text-gray-600 dark:text-gray-300 hover:text-red-500 text-xl transition">
-                    <i class="fa-regular fa-heart"></i>
-                </button>
-
-                <!-- Dynamic Auth Section -->
-                <div class="relative">
-                    <template x-if="!userLoggedIn">
-                        <button @click="loginWithGoogle($data)" class="bg-propYellow hover:bg-propYellowLight text-propDark font-bold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
-                            <i class="fa-brands fa-google"></i> Login / Register
-                        </button>
-                    </template>
-                    <template x-if="userLoggedIn">
-                        <div>
-                            <button @click="profileDropdown = !profileDropdown" class="flex items-center gap-2 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 p-1.5 pr-4 rounded-full transition border border-gray-200 dark:border-slate-700">
-                                <img :src="userAvatar" alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-xs font-bold text-gray-800 dark:text-gray-200" x-text="userName"></span>
-                                <i class="fa-solid fa-chevron-down text-[10px] text-gray-500"></i>
-                            </button>
-
-                            <!-- Small bar Logout dropdown -->
-                            <div x-show="profileDropdown" @click.outside="profileDropdown = false" class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-2xl shadow-xl py-2 border border-gray-100 dark:border-slate-700 z-50" x-transition>
-                                <div class="px-4 py-2 border-b border-gray-100 dark:border-slate-700">
-                                    <p class="text-xs font-bold text-gray-800 dark:text-gray-100" x-text="userName"></p>
-                                    <p class="text-[10px] text-gray-500 truncate" x-text="userEmail"></p>
-                                </div>
-                                <button @click="userLoggedIn = false; localStorage.removeItem('userLoggedIn'); profileDropdown = false;" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center gap-2 transition">
-                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
-                                </button>
-                            </div>
-                        </div>
-                    </template>
+        <!-- HOME PAGE SCREEN -->
+        <div id="homeScreen" class="screen">
+            <div class="home-header">
+                <div class="user-greeting">
+                    <h2>Hello, Explorer! 👋</h2>
+                    <p>Find your next ideal destination</p>
                 </div>
-            </div>
-
-            <!-- Mobile Menu Trigger -->
-            <div class="md:hidden flex items-center space-x-3">
-                <button @click="darkMode = !darkMode" class="p-2 rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-yellow-400">
-                    <i :class="darkMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon'" class="text-base"></i>
-                </button>
-                <button @click="sideMenuOpen = true" class="text-gray-700 dark:text-gray-200 text-2xl focus:outline-none">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- SIDE MENU DRAWER (Opens when hamburger clicked) -->
-    <div x-show="sideMenuOpen" class="fixed inset-0 z-50 overflow-hidden" x-transition.opacity>
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-xs" @click="sideMenuOpen = false"></div>
-        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
-            <div class="w-80 bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between pb-6 border-b border-gray-100 dark:border-slate-800">
-                        <img src="https://i.ibb.co/6R05Lz6Q/1000283253.png" alt="Logo" class="h-8">
-                        <button @click="sideMenuOpen = false" class="text-gray-500 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
-                    </div>
-
-                    <div class="mt-6 space-y-4">
-                        <a href="#" @click="currentView = 'home'; sideMenuOpen = false" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">Home</a>
-                        <a href="#" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">All Properties</a>
-                        <a href="#" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">Categories</a>
-                        <a href="#" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">About Us</a>
-                        <a href="#" class="block font-semibold text-gray-700 dark:text-gray-200 hover:text-propYellow">Contact</a>
-                    </div>
-                </div>
-
-                <!-- Side Menu Auth Footer -->
-                <div class="pt-6 border-t border-gray-100 dark:border-slate-800">
-                    <template x-if="!userLoggedIn">
-                        <button @click="loginWithGoogle($data); sideMenuOpen = false;" class="w-full bg-propYellow text-propDark font-bold py-3 rounded-xl shadow flex items-center justify-center gap-2">
-                            <i class="fa-brands fa-google"></i> Login / Register
-                        </button>
-                    </template>
-                    <template x-if="userLoggedIn">
-                        <div class="space-y-3">
-                            <div class="flex items-center gap-3 bg-gray-50 dark:bg-slate-800 p-3 rounded-xl">
-                                <img :src="userAvatar" class="w-10 h-10 rounded-full object-cover">
-                                <div>
-                                    <p class="text-xs font-bold text-gray-800 dark:text-gray-100" x-text="userName"></p>
-                                    <p class="text-[10px] text-gray-500 truncate" x-text="userEmail"></p>
-                                </div>
-                            </div>
-                            <button @click="userLoggedIn = false; localStorage.removeItem('userLoggedIn'); sideMenuOpen = false;" class="w-full bg-red-50 dark:bg-red-950/30 text-red-600 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-right-from-bracket"></i> Logout
-                            </button>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MAIN VIEW CONTAINER -->
-    <main>
-        <!-- HOME VIEW -->
-        <div x-show="currentView === 'home'">
-            <!-- HERO SECTION -->
-            <section class="relative bg-propDark text-white py-16 lg:py-24 overflow-hidden">
-                <div class="absolute inset-0 opacity-30 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80');"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-propDark via-propDark/80 to-transparent"></div>
-
-                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="max-w-2xl">
-                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                            Find Your Dream <br>Property in <span class="text-propYellow" x-text="cityInput"></span>
-                        </h1>
-                        <p class="mt-4 text-base sm:text-lg text-gray-200">
-                            Houses, Flats, Shops, Commercial Spaces and Lands - All in One Place.
-                        </p>
-
-                        <div class="mt-6 flex flex-wrap gap-4 text-sm font-medium">
-                            <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md">
-                                <i class="fa-solid fa-circle-check text-propYellow"></i> Trusted Listings
-                            </div>
-                            <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md">
-                                <i class="fa-solid fa-bolt text-propYellow"></i> Direct Connect
-                            </div>
-                            <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md">
-                                <i class="fa-solid fa-shield-heart text-propYellow"></i> No Buyer Charges
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FLOATING SEARCH BAR -->
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-30">
-                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-4 border border-gray-100 dark:border-slate-800 accent-border-top">
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-                        <div class="md:col-span-4 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 flex items-center justify-between bg-gray-50 dark:bg-slate-800">
-                            <div class="flex items-center gap-3 text-gray-700 dark:text-gray-200">
-                                <i class="fa-solid fa-house-laptop text-propYellow"></i>
-                                <span class="text-sm font-semibold">All Properties</span>
-                            </div>
-                            <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
-                        </div>
-
-                        <div class="md:col-span-4 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 flex items-center gap-3 bg-gray-50 dark:bg-slate-800">
-                            <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-                            <input type="text" placeholder="Search properties..." class="w-full bg-transparent text-sm focus:outline-none text-gray-700 dark:text-gray-200">
-                        </div>
-
-                        <!-- Enterable City Search Box -->
-                        <div class="md:col-span-2 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2 flex items-center gap-2 bg-gray-50 dark:bg-slate-800">
-                            <i class="fa-solid fa-location-dot text-red-500"></i>
-                            <input type="text" x-model="cityInput" class="w-full bg-transparent text-sm font-semibold focus:outline-none text-gray-700 dark:text-gray-200" placeholder="City">
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <button class="w-full bg-propYellow hover:bg-propYellowLight text-propDark font-bold py-3.5 px-6 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
-                                <i class="fa-solid fa-magnifying-glass"></i> Search
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CATEGORIES (SWIPEABLE ROW, NO GUIDANCE ARROWS) -->
-            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-6 bg-propYellow rounded-full"></div>
-                        <h2 class="text-xl font-bold text-propDark dark:text-white">Explore Categories</h2>
-                    </div>
-                </div>
-                
-                <div class="flex gap-4 overflow-x-auto no-scrollbar py-2">
-                    <!-- Shop's -->
-                    <div class="min-w-[140px] bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card flex-shrink-0">
-                        <div class="w-12 h-12 mx-auto bg-orange-50 dark:bg-slate-800 text-orange-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-store"></i>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Shop's</h3>
-                        <p class="text-[11px] text-gray-500 mt-0.5">Rent / Sale</p>
-                    </div>
-
-                    <!-- Hostels -->
-                    <div class="min-w-[140px] bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card flex-shrink-0">
-                        <div class="w-12 h-12 mx-auto bg-indigo-50 dark:bg-slate-800 text-indigo-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-bed"></i>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Hostels</h3>
-                        <p class="text-[11px] text-gray-500 mt-0.5">PG & Rooms</p>
-                    </div>
-
-                    <!-- Houses -->
-                    <div class="min-w-[140px] bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card flex-shrink-0">
-                        <div class="w-12 h-12 mx-auto bg-yellow-50 dark:bg-slate-800 text-propYellow rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-house"></i>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Houses</h3>
-                        <p class="text-[11px] text-gray-500 mt-0.5">Rent / Sale</p>
-                    </div>
-
-                    <!-- Apartments -->
-                    <div class="min-w-[140px] bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card flex-shrink-0">
-                        <div class="w-12 h-12 mx-auto bg-blue-50 dark:bg-slate-800 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-building"></i>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Apartments</h3>
-                        <p class="text-[11px] text-gray-500 mt-0.5">Flats</p>
-                    </div>
-
-                    <!-- Commercial -->
-                    <div class="min-w-[140px] bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card flex-shrink-0">
-                        <div class="w-12 h-12 mx-auto bg-teal-50 dark:bg-slate-800 text-teal-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-city"></i>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Commercial</h3>
-                        <p class="text-[11px] text-gray-500 mt-0.5">Offices</p>
-                    </div>
-
-                    <!-- Lands -->
-                    <div class="min-w-[140px] bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm hover:shadow-md transition text-center border border-gray-100 dark:border-slate-800 group cursor-pointer reflection-card flex-shrink-0">
-                        <div class="w-12 h-12 mx-auto bg-green-50 dark:bg-slate-800 text-green-600 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-mountain-sun"></i>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">Lands</h3>
-                        <p class="text-[11px] text-gray-500 mt-0.5">Plots & Acre</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FEATURED PROPERTIES (SWIPEABLE ROW) -->
-            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-6 bg-propYellow rounded-full"></div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-propDark dark:text-white">Featured Properties</h2>
-                    </div>
-                    <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline font-semibold text-sm flex items-center gap-1 transition">
-                        View All <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </a>
-                </div>
-
-                <!-- Swipeable Row of Cards -->
-                <div class="flex gap-6 overflow-x-auto no-scrollbar pb-4">
-                    
-                    <!-- Property 1 -->
-                    <div class="min-w-[300px] sm:min-w-[350px] bg-white dark:bg-slate-900 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-800 overflow-hidden flex flex-col justify-between reflection-card flex-shrink-0">
-                        <div>
-                            <div class="relative h-52">
-                                <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80" alt="Independent House" class="w-full h-full object-cover">
-                                <span class="absolute top-3 left-3 bg-propYellow text-propDark font-bold text-xs px-3 py-1 rounded-lg shadow">For Sale</span>
-                            </div>
-                            <div class="p-5">
-                                <h3 class="font-bold text-gray-900 dark:text-white text-base">Independent House</h3>
-                                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                                    <i class="fa-solid fa-location-dot text-red-500"></i> <span x-text="cityInput"></span>
-                                </p>
-                                <div class="mt-4 text-lg font-extrabold text-propDark dark:text-propYellow">
-                                    ₹ 65,00,000
-                                </div>
-                            </div>
-                        </div>
-                        <div class="px-5 pb-5 pt-0">
-                            <button @click="selectedProperty = {
-                                title: 'Independent House',
-                                price: '₹ 65,00,000',
-                                type: 'For Sale',
-                                location: cityInput,
-                                desc: 'Spacious 3 BHK independent luxury house equipped with modern amenities, prime parking space, and great neighborhood access.',
-                                images: [
-                                    'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80',
-                                    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80',
-                                    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
-                                ]
-                            }; currentView = 'details'; activeImageIdx = 0;" class="w-full bg-gray-50 dark:bg-slate-800 hover:bg-propYellow/10 text-propDark dark:text-gray-200 border border-gray-200 dark:border-slate-700 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                                View Details <i class="fa-solid fa-arrow-right text-xs"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Property 2 -->
-                    <div class="min-w-[300px] sm:min-w-[350px] bg-white dark:bg-slate-900 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-800 overflow-hidden flex flex-col justify-between reflection-card flex-shrink-0">
-                        <div>
-                            <div class="relative h-52">
-                                <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80" alt="2 BHK Flat" class="w-full h-full object-cover">
-                                <span class="absolute top-3 left-3 bg-propYellow text-propDark font-bold text-xs px-3 py-1 rounded-lg shadow">For Rent</span>
-                            </div>
-                            <div class="p-5">
-                                <h3 class="font-bold text-gray-900 dark:text-white text-base">2 BHK Flat</h3>
-                                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                                    <i class="fa-solid fa-location-dot text-red-500"></i> <span x-text="cityInput"></span>
-                                </p>
-                                <div class="mt-4 text-lg font-extrabold text-propDark dark:text-propYellow">
-                                    ₹ 12,000 <span class="text-xs text-gray-500 font-normal">/ Month</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="px-5 pb-5 pt-0">
-                            <button @click="selectedProperty = {
-                                title: '2 BHK Modern Flat',
-                                price: '₹ 12,000 / Month',
-                                type: 'For Rent',
-                                location: cityInput,
-                                desc: 'Well-ventilated 2 BHK apartment with 24/7 water supply, elevator, security, and power backup.',
-                                images: [
-                                    'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80',
-                                    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80',
-                                    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80'
-                                ]
-                            }; currentView = 'details'; activeImageIdx = 0;" class="w-full bg-gray-50 dark:bg-slate-800 hover:bg-propYellow/10 text-propDark dark:text-gray-200 border border-gray-200 dark:border-slate-700 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                                View Details <i class="fa-solid fa-arrow-right text-xs"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Property 3 -->
-                    <div class="min-w-[300px] sm:min-w-[350px] bg-white dark:bg-slate-900 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-800 overflow-hidden flex flex-col justify-between reflection-card flex-shrink-0">
-                        <div>
-                            <div class="relative h-52">
-                                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80" alt="Deluxe Room" class="w-full h-full object-cover">
-                                <span class="absolute top-3 left-3 bg-propYellow text-propDark font-bold text-xs px-3 py-1 rounded-lg shadow">For Rent</span>
-                            </div>
-                            <div class="p-5">
-                                <h3 class="font-bold text-gray-900 dark:text-white text-base">Deluxe Room / Hostel</h3>
-                                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                                    <i class="fa-solid fa-location-dot text-red-500"></i> <span x-text="cityInput"></span>
-                                </p>
-                                <div class="mt-4 text-lg font-extrabold text-propDark dark:text-propYellow">
-                                    ₹ 1,500 <span class="text-xs text-gray-500 font-normal">/ Night</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="px-5 pb-5 pt-0">
-                            <button @click="selectedProperty = {
-                                title: 'Deluxe Room / Hostel',
-                                price: '₹ 1,500 / Night',
-                                type: 'For Rent',
-                                location: cityInput,
-                                desc: 'Fully furnished AC deluxe room with high-speed Wi-Fi, attached bathroom, and daily housekeeping.',
-                                images: [
-                                    'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
-                                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80',
-                                    'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80'
-                                ]
-                            }; currentView = 'details'; activeImageIdx = 0;" class="w-full bg-gray-50 dark:bg-slate-800 hover:bg-propYellow/10 text-propDark dark:text-gray-200 border border-gray-200 dark:border-slate-700 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                                View Details <i class="fa-solid fa-arrow-right text-xs"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-        </div>
-
-        <!-- PROPERTY DETAILS PAGE -->
-        <div x-show="currentView === 'details'" class="max-w-4xl mx-auto px-4 py-8">
-            <!-- Text-free Back Arrow Button -->
-            <div class="flex items-center gap-4 mb-6">
-                <button @click="currentView = 'home'" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-700 dark:text-gray-200 hover:bg-propYellow hover:text-propDark transition shadow">
+                <button class="back-btn" id="backBtn">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
-                <h1 class="text-xl font-bold" x-text="selectedProperty?.title"></h1>
             </div>
 
-            <!-- Swipeable Image Gallery -->
-            <div class="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-lg border border-gray-100 dark:border-slate-800">
-                <div class="relative h-72 sm:h-96">
-                    <template x-for="(img, idx) in selectedProperty?.images">
-                        <div x-show="activeImageIdx === idx" class="absolute inset-0 transition-opacity duration-300">
-                            <img :src="img" class="w-full h-full object-cover">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass" style="color: #94a3b8;"></i>
+                <input type="text" placeholder="Search homes, offices, shops...">
+            </div>
+
+            <div class="section-title">
+                <span>Featured Listings</span>
+                <span style="font-size: 12px; color: #0284c7; cursor: pointer;">See All</span>
+            </div>
+
+            <div class="property-list">
+                <!-- Property Item 1 -->
+                <div class="property-card">
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=500&q=80" alt="Home" class="property-img">
+                    <div class="property-details">
+                        <div class="property-title">Modern Luxury Villa</div>
+                        <div class="property-location"><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Downtown Avenue, City</div>
+                        <div class="property-footer">
+                            <span class="price">$1,200<span style="font-size:11px; color:#64748b;">/mo</span></span>
+                            <span class="badge">Rent Home</span>
                         </div>
-                    </template>
-                    <span class="absolute top-4 left-4 bg-propYellow text-propDark font-extrabold text-xs px-3 py-1.5 rounded-xl shadow" x-text="selectedProperty?.type"></span>
-                    
-                    <!-- Swipe indicators -->
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-                        <template x-for="(img, idx) in selectedProperty?.images">
-                            <button @click="activeImageIdx = idx" :class="activeImageIdx === idx ? 'bg-propYellow w-6' : 'bg-white/60 w-2'" class="h-2 rounded-full transition-all"></button>
-                        </template>
                     </div>
                 </div>
 
-                <!-- Details Body -->
-                <div class="p-6 sm:p-8 space-y-6">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 dark:border-slate-800 pb-6">
-                        <div>
-                            <h2 class="text-2xl font-black text-gray-900 dark:text-white" x-text="selectedProperty?.title"></h2>
-                            <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                                <i class="fa-solid fa-location-dot text-red-500"></i> <span x-text="selectedProperty?.location"></span>
-                            </p>
+                <!-- Property Item 2 -->
+                <div class="property-card">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=500&q=80" alt="Office" class="property-img">
+                    <div class="property-details">
+                        <div class="property-title">Executive Tech Office Space</div>
+                        <div class="property-location"><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Business Hub, Sector 4</div>
+                        <div class="property-footer">
+                            <span class="price">$2,500<span style="font-size:11px; color:#64748b;">/mo</span></span>
+                            <span class="badge" style="background:#fef3c7; color:#d97706;">Rent Office</span>
                         </div>
-                        <div class="text-2xl font-extrabold text-propDark dark:text-propYellow" x-text="selectedProperty?.price"></div>
                     </div>
+                </div>
 
-                    <div>
-                        <h3 class="font-bold text-sm text-gray-800 dark:text-gray-200 mb-2">Description</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" x-text="selectedProperty?.desc"></p>
-                    </div>
-
-                    <!-- Two Action Buttons -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                        <button @click="connectOwnerModal = true" class="w-full bg-propYellow hover:bg-propYellowLight text-propDark font-extrabold py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-headset"></i> Connect Owner
-                        </button>
-                        <button @click="enquirySuccessModal = true" class="w-full bg-propDark dark:bg-slate-800 hover:bg-slate-800 text-white font-extrabold py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-paper-plane"></i> Enquiry Now
-                        </button>
+                <!-- Property Item 3 -->
+                <div class="property-card">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80" alt="Shop" class="property-img">
+                    <div class="property-details">
+                        <div class="property-title">High-Street Retail Shop</div>
+                        <div class="property-location"><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Central Market Street</div>
+                        <div class="property-footer">
+                            <span class="price">$1,800<span style="font-size:11px; color:#64748b;">/mo</span></span>
+                            <span class="badge" style="background:#dcfce7; color:#16a34a;">Rent Shop</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
 
-    <!-- CONNECT OWNER MODAL OPTIONS (WhatsApp & Call Now) -->
-    <div x-show="connectOwnerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs" x-transition.opacity>
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-gray-100 dark:border-slate-800 text-center space-y-4">
-            <div class="w-12 h-12 mx-auto bg-propYellow text-propDark rounded-2xl flex items-center justify-center text-xl shadow">
-                <i class="fa-solid fa-phone-volume"></i>
-            </div>
-            <h3 class="text-lg font-black text-gray-900 dark:text-white">Connect with Owner</h3>
-            <p class="text-xs text-gray-500">Choose your preferred communication mode</p>
-
-            <div class="space-y-3 pt-2">
-                <a href="https://wa.me/" target="_blank" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow flex items-center justify-center gap-2 text-sm transition">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
-                </a>
-                <a href="tel:+919876543210" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow flex items-center justify-center gap-2 text-sm transition">
-                    <i class="fa-solid fa-phone text-lg"></i> Call Now
-                </a>
-                <button @click="connectOwnerModal = false" class="w-full bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold py-2.5 rounded-xl text-xs transition">
-                    Cancel
-                    </button>
-            </div>
-        </div>
     </div>
 
-    <!-- ENQUIRY SUCCESS POPUP MODAL -->
-    <div x-show="enquirySuccessModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs" x-transition.opacity>
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-gray-100 dark:border-slate-800 text-center space-y-4">
-            <div class="w-14 h-14 mx-auto bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl shadow">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h3 class="text-base font-extrabold text-gray-900 dark:text-white">Your Enquiry is processing... Our team will update you soon..</h3>
-            <button @click="enquirySuccessModal = false" class="w-full bg-propYellow hover:bg-propYellowLight text-propDark font-extrabold py-3 rounded-xl shadow transition text-sm">
-                OK
-            </button>
-        </div>
-    </div>
+    <script>
+        const landingScreen = document.getElementById('landingScreen');
+        const homeScreen = document.getElementById('homeScreen');
+        const letsGoBtn = document.getElementById('letsGoBtn');
+        const backBtn = document.getElementById('backBtn');
 
-    <!-- FOOTER -->
-    <footer class="bg-propDark text-gray-400 py-12 border-t border-gray-800 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center space-x-3 cursor-pointer" @click="currentView = 'home'">
-                <img src="https://i.ibb.co/6R05Lz6Q/1000283253.png" alt="Logo" class="h-10">
-            </div>
+        // Transition from Landing Page to Home Page when "Let's Go" is clicked
+        letsGoBtn.addEventListener('click', () => {
+            landingScreen.classList.remove('active');
+            homeScreen.classList.add('active');
+        });
 
-            <div class="flex flex-wrap justify-center gap-6 text-xs font-medium text-gray-300">
-                <a href="#" @click="currentView = 'home'" class="hover:text-propYellow transition">Home</a>
-                <a href="#" class="hover:text-propYellow transition">All Properties</a>
-                <a href="#" class="hover:text-propYellow transition">About</a>
-                <a href="#" class="hover:text-propYellow transition">Contact</a>
-            </div>
-
-            <div class="flex items-center space-x-4 text-sm">
-                <span class="text-xs text-gray-400">Follow Us:</span>
-                <a href="#" class="w-8 h-8 rounded-full bg-gray-800 hover:bg-propYellow hover:text-propDark flex items-center justify-center transition"><i class="fa-brands fa-whatsapp"></i></a>
-                <a href="#" class="w-8 h-8 rounded-full bg-gray-800 hover:bg-propYellow hover:text-propDark flex items-center justify-center transition"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="w-8 h-8 rounded-full bg-gray-800 hover:bg-propYellow hover:text-propDark flex items-center justify-center transition"><i class="fa-brands fa-facebook-f"></i></a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- MOBILE BOTTOM NAVIGATION BAR -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 py-2 px-6 flex justify-between items-center z-40 shadow-lg">
-        <a href="#" @click="currentView = 'home'" :class="currentView === 'home' ? 'text-propYellow' : 'text-gray-500 dark:text-gray-400'" class="flex flex-col items-center text-xs font-semibold transition">
-            <i class="fa-solid fa-house text-lg"></i>
-            <span class="text-[10px] mt-0.5">Home</span>
-        </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-propYellow text-xs font-semibold">
-            <i class="fa-solid fa-magnifying-glass text-lg"></i>
-            <span class="text-[10px] mt-0.5">Search</span>
-        </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-propYellow text-xs font-semibold">
-            <i class="fa-regular fa-heart text-lg"></i>
-            <span class="text-[10px] mt-0.5">Favorites</span>
-        </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-propYellow text-xs font-semibold">
-            <i class="fa-regular fa-bell text-lg"></i>
-            <span class="text-[10px] mt-0.5">Alerts</span>
-        </a>
-        <a href="#" @click="if(!userLoggedIn) { loginWithGoogle($data); }" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-propYellow text-xs font-semibold">
-            <i class="fa-regular fa-user text-lg"></i>
-            <span class="text-[10px] mt-0.5" x-text="userLoggedIn ? 'Profile' : 'Login'"></span>
-        </a>
-    </div>
-
+        // Go back option for testing loop
+        backBtn.addEventListener('click', () => {
+            homeScreen.classList.remove('active');
+            landingScreen.classList.add('active');
+        });
+    </script>
 </body>
 </html>
