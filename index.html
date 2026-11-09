@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RentSpot - Landing Page</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Rentspot - Find Your Perfect Space</title>
+    <!-- Google Fonts & FontAwesome for Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         * {
             margin: 0;
@@ -21,219 +23,326 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        /* App Container mimicking mobile/responsive wrapper */
         .app-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
             background: #ffffff;
             min-height: 100vh;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* Screen Management */
-        .screen {
-            display: none;
-            flex-direction: column;
-            flex: 1;
-            padding: 24px 20px;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        .screen.active {
+        /* Pages */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
             display: flex;
+            flex-direction: column;
+            overflow-y: auto;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .page.hidden {
+            transform: translateX(-100%);
+            opacity: 0;
+            pointer-events: none;
         }
 
-        /* --- LANDING PAGE STYLES --- */
-        .illustration-container {
+        .page.active {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* LANDING PAGE STYLING */
+        /* Realistic Background Animation Section */
+        .hero-banner {
             position: relative;
             width: 100%;
-            height: 320px;
-            background: linear-gradient(135deg, #eef4f8 0%, #e0edf5 100%);
-            border-radius: 20px;
+            height: 380px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            margin-bottom: 25px;
         }
 
-        .illustration-img {
+        /* Animated Background City Skyline Elements */
+        .city-bg {
+            position: absolute;
+            bottom: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            background: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+            opacity: 0.15;
+            z-index: 1;
         }
 
-        /* Blinking Location Pin Effect */
-        @keyframes blink {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.1); }
+        /* Realistic Moving Characters Container */
+        .character-scene {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding-bottom: 20px;
         }
 
-        .blink-pin {
+        /* Walking Animation Simulation */
+        @keyframes walkMotion {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .animated-characters {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            animation: walkMotion 2.5s infinite ease-in-out;
+        }
+
+        .char-img {
+            height: 240px;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));
+        }
+
+        /* Blinking Location Pin Animation */
+        @keyframes blinkPin {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+        }
+
+        .blinking-location {
             position: absolute;
-            top: 25px;
-            left: 52%;
+            top: 40px;
+            left: 50%;
             transform: translateX(-50%);
+            z-index: 4;
             background: #ffcc00;
-            color: #0b2545;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            color: #1a1a1a;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.5);
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            animation: blink 1.2s infinite ease-in-out;
-            font-size: 16px;
+            gap: 6px;
+            animation: blinkPin 1.5s infinite ease-in-out;
         }
 
-        .brand-section {
+        .blinking-location i {
+            color: #d32f2f;
+        }
+
+        /* Side Signboard Graphic */
+        .side-sign {
+            position: absolute;
+            left: 15px;
+            bottom: 30px;
+            background: #ffecb3;
+            border-left: 5px solid #ffb300;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 3;
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: 25px 20px;
             text-align: center;
-            margin-bottom: 20px;
+            background: #fff;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .logo-img {
-            width: 220px;
-            max-width: 100%;
-            margin-bottom: 8px;
+        /* Logo Area */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-main {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 28px;
+            font-weight: 800;
+            color: #1a2530;
+        }
+
+        .logo-main span {
+            color: #ffb300;
+        }
+
+        .logo-icon-house {
+            background: #ffb300;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 20px;
         }
 
         .tagline {
-            font-size: 22px;
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Heading & Subtitle */
+        .headline-group h1 {
+            font-size: 20px;
             font-weight: 700;
-            color: #0b2545;
+            color: #1a2530;
             margin-bottom: 6px;
         }
 
-        .sub-tagline {
+        .headline-group p {
             font-size: 13px;
-            color: #6c757d;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        /* Quick Category Icons */
+        .categories-grid {
+            display: flex;
+            justify-content: space-around;
             margin-bottom: 25px;
         }
 
-        /* Category Icons */
-        .categories {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-        }
-
-        .category-card {
-            text-align: center;
+        .cat-card {
             background: #fffdf0;
             border: 1px solid #ffeeba;
-            padding: 15px 10px;
-            border-radius: 16px;
+            border-radius: 14px;
+            padding: 12px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
             width: 30%;
-            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.1);
+            transition: transform 0.2s;
         }
 
-        .category-card i {
-            font-size: 22px;
-            color: #ffb703;
-            margin-bottom: 8px;
+        .cat-card:hover {
+            transform: translateY(-3px);
         }
 
-        .category-card span {
-            display: block;
+        .cat-card i {
+            font-size: 20px;
+            color: #f39c12;
+        }
+
+        .cat-card span {
             font-size: 12px;
             font-weight: 600;
-            color: #0b2545;
+            color: #333;
         }
 
-        /* Bl
-        inking Let's Go Button */
-        @keyframes btnBlink {
-            0%, 100% { box-shadow: 0 6px 20px rgba(255, 183, 3, 0.4); transform: scale(1); }
-            50% { box-shadow: 0 2px 10px rgba(255, 183, 3, 0.2); transform: scale(0.98); }
+        /* Blinking Let's Go Button */
+        @keyframes buttonPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 179, 0, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 179, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 179, 0, 0); }
         }
 
         .lets-go-btn {
-            background: #ffb703;
-            color: #0b2545;
-            font-size: 18px;
-            font-weight: 700;
-            border: none;
             width: 100%;
+            background: linear-gradient(135deg, #ffca28 0%, #ffb300 100%);
+            color: #1a2530;
+            border: none;
             padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
             border-radius: 35px;
             cursor: pointer;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             gap: 10px;
-            animation: btnBlink 1.5s infinite ease-in-out;
-            transition: background 0.3s;
-            margin-bottom: 20px;
+            animation: buttonPulse 2s infinite;
+            transition: background 0.3s, transform 0.2s;
+            margin-bottom: 15px;
         }
 
         .lets-go-btn:hover {
-            background: #fb8500;
-            color: #fff;
+            background: linear-gradient(135deg, #ffb300 0%, #ffa000 100%);
+            transform: scale(1.02);
         }
 
-        .footer-terms {
+        /* Footer Terms */
+        .terms-text {
             font-size: 10px;
-            text-align: center;
-            color: #8d99ae;
+            color: #95a5a6;
             line-height: 1.4;
-            padding: 0 10px;
         }
 
-        .footer-terms a {
-            color: #0077b6;
+        .terms-text a {
+            color: #2980b9;
             text-decoration: none;
         }
 
-        /* --- HOME PAGE STYLES --- */
+        /* HOME PAGE STYLING (Appears when Let's Go is clicked) */
         .home-header {
+            background: #ffb300;
+            padding: 20px;
+            color: #1a2530;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
         }
 
-        .user-greeting h2 {
+        .home-header h2 {
             font-size: 18px;
-            color: #0b2545;
-        }
-
-        .user-greeting p {
-            font-size: 12px;
-            color: #6c757d;
+            font-weight: 700;
         }
 
         .back-btn {
-            background: #f1f5f9;
+            background: #fff;
             border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
             cursor: pointer;
+            font-size: 12px;
+        }
+
+        .home-body {
+            padding: 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #0b2545;
-            font-size: 16px;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .search-bar {
             display: flex;
-            align-items: center;
-            background: #f1f5f9;
-            padding: 12px 16px;
+            background: #f1f2f6;
+            padding: 12px 15px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            align-items: center;
             gap: 10px;
         }
 
@@ -241,78 +350,53 @@
             border: none;
             background: transparent;
             outline: none;
-            font-size: 14px;
             width: 100%;
+            font-size: 14px;
         }
 
         .section-title {
             font-size: 16px;
-            font-weight: 600;
-            color: #0b2545;
-            margin-bottom: 15px;
+            font-weight: 700;
+            color: #1a2530;
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .property-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow-y: auto;
-            max-height: calc(100vh - 220px);
-            padding-bottom: 20px;
         }
 
         .property-card {
             background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
         }
 
         .property-img {
             width: 100%;
-            height: 140px;
-            object-fit: cover;
+            height: 150px;
+            background: url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80') center/cover no-repeat;
         }
 
         .property-details {
-            padding: 12px 15px;
+            padding: 15px;
         }
 
-        .property-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #0b2545;
-        }
-
-        .property-location {
-            font-size: 12px;
-            color: #64748b;
-            margin-bottom: 8px;
-        }
-
-        .property-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .price {
+        .property-details h4 {
             font-size: 15px;
             font-weight: 700;
-            color: #fb8500;
+            margin-bottom: 4px;
         }
 
-        .badge {
-            background: #e0f2fe;
-            color: #0284c7;
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 600;
+        .property-details p {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .property-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: #e67e22;
         }
     </style>
 </head>
@@ -320,138 +404,148 @@
 
     <div class="app-container">
         
-        <!-- LANDING PAGE SCREEN -->
-        <div id="landingScreen" class="screen active">
-            <!-- Illustration with conversation and blinking location pin -->
-            <div class="illustration-container">
-                <!-- Blinking Location Pin matching image reference -->
-                <div class="blink-pin">
-                    <i class="fa-solid fa-house"></i>
+        <!-- ================= LANDING PAGE ================= -->
+        <div id="landingPage" class="page active">
+            
+            <!-- Realistic Animated Background & Characters Banner -->
+            <div class="hero-banner">
+                <div class="city-bg"></div>
+                
+                <!-- Blinking Location Pin near characters -->
+                <div class="blinking-location">
+                    <i class="fa-solid fa-location-dot"></i> Meeting Spot
                 </div>
-                <!-- Illustration Image representing the conversation between two people[span_3](start_span)[span_3](end_span) -->
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80" alt="Conversation Illustration" class="illustration-img">
-            </div>
 
-            <div class="brand-section">
-                <!-- Logo text/image representation -->
-                <h1 style="color: #0b2545; font-size: 28px; font-weight: 800;"><i class="fa-solid fa-house-chimney" style="color: #ffb703;"></i> Rent<span style="color: #ffb703;">spot</span></h1>
-                <p style="font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 1px; margin-top: 2px;">FIND • RENT • LIVE BETTER</p>
-            </div>
-
-            <div style="text-align: center; margin-bottom: 20px;">
-                <h2 class="tagline">Find Your Perfect Space</h2>
-                <p class="sub-tagline">Rent homes, offices and more – easily!</p>
-            </div>
-
-            <!-- Categories -->
-            <div class="categories">
-                <div class="category-card">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Homes</span>
+                <!-- Side Signboard -->
+                <div class="side-sign">
+                    🏠 Rent Home<br>
+                    🏢 Rent Office<br>
+                    🛒 Rent Shop
                 </div>
-                <div class="category-card">
-                    <i class="fa-solid fa-building"></i>
-                    <span>Offices</span>
-                </div>
-                <div class="category-card">
-                    <i class="fa-solid fa-store"></i>
-                    <span>Shops</span>
+
+                <!-- Animated Walking Characters Scene -->
+                <div class="character-scene">
+                    <div class="animated-characters">
+                        <!-- Left Character (Agent with clipboard) -->
+                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Agent" class="char-img" style="transform: scaleX(-1);">
+                        <!-- Right Character (Customer with luggage) -->
+                        <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Customer" class="char-img">
+                    </div>
                 </div>
             </div>
 
-            <!-- Blinking Let's Go Button -->
-            <button class="lets-go-btn" id="letsGoBtn">
-                Let's Go <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            <!-- Lower Content Section -->
+            <div class="content-section">
+                <!-- Logo & Tagline -->
+                <div class="logo-container">
+                    <div class="logo-main">
+                        <div class="logo-icon-house"><i class="fa-solid fa-house"></i></div>
+                        Rent<span>spot</span>
+                    </div>
+                    <p class="tagline">Find • Rent • Live Better</p>
+                </div>
 
-            <div class="footer-terms">
-                By continuing, you agree to our <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a><br>
-                By continuing, you agree to be contacted by us and our authorized representatives
+                <!-- Headline -->
+                <div class="headline-group">
+                    <h1>Find Your Perfect Space</h1>
+                    <p>Rent homes, offices and more — easily!</p>
+                </div>
+
+                <!-- Category Icons -->
+                <div class="categories-grid">
+                    <div class="cat-card">
+                        <i class="fa-solid fa-house-chimney"></i>
+                        <span>Homes</span>
+                    </div>
+                    <div class="cat-card">
+                        <i class="fa-solid fa-building"></i>
+                        <span>Offices</span>
+                    </div>
+                    <div class="cat-card">
+                        <i class="fa-solid fa-store"></i>
+                        <span>Shops</span>
+                    </div>
+                </div>
+
+                <!-- Blinking "Let's Go" Button -->
+                <button class="lets-go-btn" id="letsGoBtn">
+                    Let's Go <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <!-- Footer Terms -->
+                <div class="terms-text">
+                    By continuing, you agree to our <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a><br>
+                    By continuing, you agree to be contacted by us and our authorized representatives.
+                </div>
             </div>
         </div>
 
-        <!-- HOME PAGE SCREEN -->
-        <div id="homeScreen" class="screen">
-            <div class="home-header">
-                <div class="user-greeting">
-                    <h2>Hello, Explorer! 👋</h2>
-                    <p>Find your next ideal destination</p>
+        <!-- ================= HOME PAGE (Opens on click) ================= -->
+        <div id="homePage" class="page hidden">
+            <header class="home-header">
+                <h2>Rentspot Dashboard</h2>
+                <button class="back-btn" id="backBtn"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            </header>
+
+            <div class="home-body">
+                <!-- Search bar -->
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #95a5a6;"></i>
+                    <input type="text" placeholder="Search homes, offices, shops...">
                 </div>
-                <button class="back-btn" id="backBtn">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </button>
-            </div>
 
-            <div class="search-bar">
-                <i class="fa-solid fa-magnifying-glass" style="color: #94a3b8;"></i>
-                <input type="text" placeholder="Search homes, offices, shops...">
-            </div>
+                <!-- Section: Featured Listings -->
+                <div class="section-title">
+                    <span>Featured Properties</span>
+                    <span style="font-size: 12px; color: #f39c12; cursor: pointer;">See All</span>
+                </div>
 
-            <div class="section-title">
-                <span>Featured Listings</span>
-                <span style="font-size: 12px; color: #0284c7; cursor: pointer;">See All</span>
-            </div>
-
-            <div class="property-list">
-                <!-- Property Item 1 -->
+                <!-- Property Card 1 -->
                 <div class="property-card">
-                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=500&q=80" alt="Home" class="property-img">
+                    <div class="property-img" style="background-image: url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80');"></div>
                     <div class="property-details">
-                        <div class="property-title">Modern Luxury Villa</div>
-                        <div class="property-location"><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Downtown Avenue, City</div>
-                        <div class="property-footer">
-                            <span class="price">$1,200<span style="font-size:11px; color:#64748b;">/mo</span></span>
-                            <span class="badge">Rent Home</span>
-                        </div>
+                        <h4>Modern Suburban Family Home</h4>
+                        <p><i class="fa-solid fa-location-dot" style="color: #e74c3c;"></i> Downtown Metropolitan Area</p>
+                        <div class="property-price">$1,200 / month</div>
                     </div>
                 </div>
 
-                <!-- Property Item 2 -->
+                <!-- Property Card 2 -->
                 <div class="property-card">
-                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=500&q=80" alt="Office" class="property-img">
+                    <div class="property-img" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80');"></div>
                     <div class="property-details">
-                        <div class="property-title">Executive Tech Office Space</div>
-                        <div class="property-location"><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Business Hub, Sector 4</div>
-                        <div class="property-footer">
-                            <span class="price">$2,500<span style="font-size:11px; color:#64748b;">/mo</span></span>
-                            <span class="badge" style="background:#fef3c7; color:#d97706;">Rent Office</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Property Item 3 -->
-                <div class="property-card">
-                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80" alt="Shop" class="property-img">
-                    <div class="property-details">
-                        <div class="property-title">High-Street Retail Shop</div>
-                        <div class="property-location"><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Central Market Street</div>
-                        <div class="property-footer">
-                            <span class="price">$1,800<span style="font-size:11px; color:#64748b;">/mo</span></span>
-                            <span class="badge" style="background:#dcfce7; color:#16a34a;">Rent Shop</span>
-                        </div>
+                        <h4>Executive Corporate Office Suite</h4>
+                        <p><i class="fa-solid fa-location-dot" style="color: #e74c3c;"></i> Business Financial District</p>
+                        <div class="property-price">$2,500 / month</div>
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-
+    <!-- JavaScript for Page Transition Handling -->
     <script>
-        const landingScreen = document.getElementById('landingScreen');
-        const homeScreen = document.getElementById('homeScreen');
         const letsGoBtn = document.getElementById('letsGoBtn');
         const backBtn = document.getElementById('backBtn');
+        const landingPage = document.getElementById('landingPage');
+        const homePage = document.getElementById('homePage');
 
-        // Transition from Landing Page to Home Page when "Let's Go" is clicked
+        // Transition to Home Page when Let's Go is clicked
         letsGoBtn.addEventListener('click', () => {
-            landingScreen.classList.remove('active');
-            homeScreen.classList.add('active');
+            landingPage.classList.remove('active');
+            landingPage.classList.add('hidden');
+            
+            homePage.classList.remove('hidden');
+            homePage.classList.add('active');
         });
 
-        // Go back option for testing loop
+        // Return back to Landing Page
         backBtn.addEventListener('click', () => {
-            homeScreen.classList.remove('active');
-            landingScreen.classList.add('active');
+            homePage.classList.remove('active');
+            homePage.classList.add('hidden');
+            
+            landingPage.classList.remove('hidden');
+            landingPage.classList.add('active');
         });
     </script>
 </body>
