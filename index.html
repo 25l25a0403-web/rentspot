@@ -1,392 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rentspot - Find Your Perfect Space</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background-color: #ffffff;
-            color: #1e293b;
-            overflow-x: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        /* Container to simulate mobile frame or full responsive view */
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            background: #ffffff;
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        /* --- SPLASH SCREEN (Yellow & Navy Blue mixed screen) --- */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #FFD700 0%, #001F54 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
-        }
-
-        #splash-screen.minimize {
-            transform: scale(0);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .splash-logo-text {
-            color: #ffffff;
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            animation: pulse 1.5s infinite alternate;
-        }
-
-        .splash-subtext {
-            color: #FFD700;
-            font-size: 1rem;
-            margin-top: 10px;
-            font-weight: 500;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.05); }
-        }
-
-        /* --- LANDING PAGE STYLES --- */
-        .page {
-            display: none;
-            width: 100%;
-            height: 100%;
-            animation: fadeIn 0.5s ease-in-out forwards;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Top Illustration Section */
-        .hero-illustration {
-            width: 100%;
-            background: #f4f8fb;
-            text-align: center;
-            padding: 20px 0;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-        }
-
-        .hero-illustration img {
-            width: 100%;
-            max-width: 400px;
-            height: 60%;
-            object-fit: contain;
-        }
-
-        /* Content Section */
-        .content-section {
-            padding: 24px 20px;
-            text-align: center;
-        }
-
-        /* Logo Area */
-        .brand-logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .brand-logo-img {
-            height: 45px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .tagline {
-            font-size: 0.9rem;
-            color: #001F54;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin-bottom: 20px;
-        }
-
-        /* Heading */
-        .main-heading {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 6px;
-        }
-
-        .sub-heading {
-            font-size: 0.85rem;
-            color: #6b7280;
-            margin-bottom: 25px;
-        }
-
-        /* Options Grid (Homes, Offices, Shops) */
-        .options-grid {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-            padding: 0 10px;
-        }
-
-        .option-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .option-icon-bg {
-            width: 65px;
-            height: 65px;
-            background-color: #fff9db;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-            box-shadow: 0 4px 6px rgba(255, 215, 0, 0.2);
-            transition: transform 0.2s;
-        }
-
-        .option-icon-bg:hover {
-            transform: scale(1.05);
-        }
-
-        .option-icon-bg img {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-        }
-
-        .option-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        /* Let's Go Button */
-        .lets-go-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #FFD700 0%, #ffc400 100%);
-            color: #111827;
-            border: none;
-            padding: 16px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border-radius: 40px;
-            cursor: pointer;
-            box-shadow: 0 8px 15px rgba(255, 215, 0, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-
-        .lets-go-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 20px rgba(255, 215, 0, 0.6);
-        }
-
-        /* Terms & Conditions text */
-        .terms-text {
-            font-size: 0.68rem;
-            color: #9ca3af;
-            line-height: 1.4;
-            padding: 0 10px;
-        }
-
-        .terms-text a {
-            color: #001F54;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        /* --- HOME PAGE (COMING SOON) STYLES --- */
-        .coming-soon-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            padding: 30px;
-            background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
-        }
-
-        .coming-soon-logo {
-            width: 160px;
-            height: auto;
-            margin-bottom: 20px;
-        }
-
-        .coming-soon-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #001F54;
-            margin-bottom: 10px;
-        }
-
-        .coming-soon-desc {
-            font-size: 0.95rem;
-            color: #4b5563;
-            margin-bottom: 30px;
-        }
-
-        .back-btn {
-            background-color: #001F54;
-            color: #ffffff;
-            border: none;
-            padding: 12px 28px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .back-btn:hover {
-            background-color: #001233;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Rentspot — Find, Rent, Live Better. Find homes, offices and shops with ease.">
+<title>Rentspot | Find • Rent • Live Better</title>
+<style>
+:root{--navy:#08285b;--yellow:#ffd21c;--yellow2:#f6bd00;--muted:#667895}
+*{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--navy);background:#fff}
+body{display:flex;justify-content:center}.page{width:100%;max-width:520px;min-height:100svh;background:#fff;overflow:hidden;position:relative;padding-bottom:26px}
+.hero{height:52svh;min-height:360px;max-height:610px;position:relative;background-image:url('assets/rentspot-hero.jpg');background-size:cover;background-position:center 46%;isolation:isolate}
+.hero:after{content:"";position:absolute;inset:55% 0 0;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 98%);z-index:1}
+.brand{position:relative;margin:-2px auto 0;width:min(91%,440px);z-index:2;text-align:center}
+.brand img{display:block;width:100%;height:auto;margin:auto;object-fit:contain}
+.content{text-align:center;padding:5px 25px 0}
+h1{font-size:clamp(25px,6.2vw,34px);line-height:1.16;letter-spacing:-.8px;margin:9px 0 7px;font-weight:850}
+.subtitle{font-size:clamp(15px,3.9vw,19px);font-weight:600;color:#71809a;margin:0}
+.categories{display:flex;justify-content:center;align-items:center;margin:27px auto 28px;max-width:390px}
+.category{flex:1;display:flex;align-items:center;flex-direction:column;gap:8px;font-size:16px;font-weight:750}
+.category+.category{border-left:1px solid #f4d86d}
+.icon-wrap{width:68px;height:68px;border-radius:50%;background:#fff4bf;display:grid;place-items:center}
+.category svg{width:37px;height:37px;stroke:var(--navy);stroke-width:2.3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cta-wrap{padding:0 27px}
+.cta{display:block;width:100%;border:0;border-radius:999px;padding:17px 20px 18px;background:linear-gradient(180deg,#ffdf37 0%,#ffd21c 54%,#f5bd00 100%);color:var(--navy);font-size:clamp(25px,6vw,32px);font-weight:850;letter-spacing:-.5px;box-shadow:0 8px 0 #dba900,0 12px 19px rgba(204,155,0,.23),inset 0 3px 5px rgba(255,255,255,.75);text-decoration:none;transition:transform .16s ease,box-shadow .16s ease;cursor:pointer}
+.cta:active{transform:translateY(5px);box-shadow:0 3px 0 #dba900,0 6px 10px rgba(204,155,0,.2),inset 0 3px 5px rgba(255,255,255,.65)}
+.terms{font-size:12px;line-height:1.7;color:#162c4d;margin:27px 24px 0}
+.terms a{color:#1762a4;text-decoration:none}
+@media(min-width:700px){body{background:#f2f5fa}.page{box-shadow:0 0 35px rgba(12,39,78,.08)}}
+@media(max-height:740px){.hero{height:47svh;min-height:300px}.categories{margin:19px auto 22px}.terms{margin-top:22px}}
+</style>
 </head>
 <body>
-
-    <!-- Splash Screen (Yellow & Navy Blue mixed screen that minimizes) -->
-    <div id="splash-screen">
-        <div class="splash-logo-text">Rentspot</div>
-        <div class="splash-subtext">Find • Rent • Live Better</div>
+<main class="page">
+  <section class="hero" aria-label="Rentspot rental illustration"></section>
+  <div class="brand"><img src="assets/rentspot-logo.png" alt="Rentspot — Find, Rent, Live Better"></div>
+  <section class="content">
+    <h1>Find Your Perfect Space</h1>
+    <p class="subtitle">Rent homes, offices and more — easily!</p>
+    <div class="categories">
+      <div class="category"><div class="icon-wrap"><svg viewBox="0 0 48 48"><path d="M6 22 24 7l18 15M11 19v22h26V19M20 41V27h8v14"/></svg></div><span>Homes</span></div>
+      <div class="category"><div class="icon-wrap"><svg viewBox="0 0 48 48"><rect x="9" y="7" width="30" height="34" rx="2"/><path d="M16 14h4m8 0h4M16 22h4m8 0h4M16 30h4m8 0h4M21 41V35h6v6"/></svg></div><span>Offices</span></div>
+      <div class="category"><div class="icon-wrap"><svg viewBox="0 0 48 48"><path d="M6 19h36l-3-10H9L6 19ZM9 19v22h30V19M6 19c0 5 8 5 8 0 0 5 8 5 8 0 0 5 8 5 8 0 0 5 8 5 8 0M18 41V28h12v13"/></svg></div><span>Shops</span></div>
     </div>
-
-    <div class="app-container">
-        
-        <!-- LANDING PAGE -->
-        <div id="landing-page" class="page active">
-            <!-- Illustration Graphic (Top) -->
-            <div class="hero-illustration">
-                <!-- Using placeholder asset representing the agents and renting tags from image[span_1](start_span)[span_1](end_span) -->
-                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=600&q=80" alt="Rentspot Agents Illustration">
-            </div>
-
-            <!-- Content Elements -->
-            <div class="content-section">
-                <!-- Logo & Tagline -->
-                <div class="brand-logo-container">
-                    <!-- Text/Graphic Logo representation matching brand style[span_2](start_span)[span_2](end_span) -->
-                    <h1 style="color: #001F54; font-size: 1.8rem; font-weight: 800;">Rent<span style="color: #FFD700;">spot</span> 📍</h1>
-                </div>
-                <div class="tagline">Find &nbsp;•&nbsp; Rent &nbsp;•&nbsp; Live Better</div>
-
-                <h2 class="main-heading">Find Your Perfect Space</h2>
-                <p class="sub-heading">Rent homes, offices and more – easily!</p>
-
-                <!-- Options: Homes, Offices, Shops[span_3](start_span)[span_3](end_span) -->
-                <div class="options-grid">
-                    <div class="option-item">
-                        <div class="option-icon-bg">
-                            <span style="font-size: 1.4rem;">🏠</span>
-                        </div>
-                        <span class="option-label">Homes</span>
-                    </div>
-                    <div class="option-item">
-                        <div class="option-icon-bg">
-                            <span style="font-size: 1.4rem;">🏢</span>
-                        </div>
-                        <span class="option-label">Offices</span>
-                    </div>
-                    <div class="option-item">
-                        <div class="option-icon-bg">
-                            <span style="font-size: 1.4rem;">🏬</span>
-                        </div>
-                        <span class="option-label">Shops</span>
-                    </div>
-                </div>
-
-                <!-- Let's Go Button[span_4](start_span)[span_4](end_span) -->
-                <button class="lets-go-btn" id="letsGoBtn">
-                    Let's Go &rarr;
-                </button>
-
-                <!-- Footer Terms -->
-                <div class="terms-text">
-                    By continuing, you agree to our <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a><br>
-                    By continuing, you agree to be contacted by us and our authorized representatives
-                </div>
-            </div>
-        </div>
-
-        <!-- HOME PAGE (Coming Soon...) -->
-        <div id="home-page" class="page">
-            <div class="coming-soon-container">
-                <h1 style="color: #001F54; font-size: 2.2rem; font-weight: 800; margin-bottom: 10px;">Rent<span style="color: #FFD700;">spot</span> 📍</h1>
-                <h2 class="coming-soon-title">Coming Soon...</h2>
-                <p class="coming-soon-desc">We are working hard to bring you the best experience for finding homes, offices, and shops!</p>
-                <button class="back-btn" id="backBtn">Back to Intro</button>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        // Splash screen minimization and transition logic
-        const splashScreen = document.getElementById('splash-screen');
-        const landingPage = document.getElementById('landing-page');
-        const homePage = document.getElementById('home-page');
-        const letsGoBtn = document.getElementById('letsGoBtn');
-        const backBtn = document.getElementById('backBtn');
-
-        // Automatically minimize splash screen after 2 seconds to show the landing page smoothly
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                splashScreen.classList.add('minimize');
-            }, 2000);
-        });
-
-        // Redirect to Home Page (Coming Soon...) when clicking "Let's Go"
-        letsGoBtn.addEventListener('click', () => {
-            landingPage.classList.remove('active');
-            homePage.classList.add('active');
-        });
-
-        // Allow going back to landing page if desired
-        backBtn.addEventListener('click', () => {
-            homePage.classList.remove('active');
-            landingPage.classList.add('active');
-        });
-    </script>
+    <div class="cta-wrap"><a class="cta" href="coming-soon.html">Let’s Go</a></div>
+    <p class="terms">By continuing, you agree to our <a href="#" onclick="return false">Terms and Conditions</a> and <a href="#" onclick="return false">Privacy Policy</a>.<br>By continuing, you agree to be contacted by us and our authorized representatives.</p>
+  </section>
+</main>
 </body>
 </html>
