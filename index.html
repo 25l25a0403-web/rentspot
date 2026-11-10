@@ -1,51 +1,1527 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#ffffff">
-<meta name="description" content="Rentspot — Find, Rent, Live Better. Find homes, offices and shops with ease.">
-<title>Rentspot | Find • Rent • Live Better</title>
+<meta name="description" content="RentSpot - Find, Rent, Live Better">
+<title>RentSpot | Find • Rent • Live Better</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
-:root{--navy:#08285b;--yellow:#ffd21c;--yellow2:#f6bd00;--muted:#667895}
-*{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--navy);background:#fff}
-body{display:flex;justify-content:center}.page{width:100%;max-width:520px;min-height:100svh;background:#fff;overflow:hidden;position:relative;padding-bottom:26px}
-.hero{height:52svh;min-height:360px;max-height:610px;position:relative;background-image:url('assets/file_00000000f8c08211aa7c1d09fa1bd747.png');background-size:cover;background-position:center 46%;isolation:isolate}
-.hero:after{content:"";position:absolute;inset:55% 0 0;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 98%);z-index:1}
-.brand{position:relative;margin:-2px auto 0;width:min(91%,440px);z-index:2;text-align:center}
-.brand img{display:block;width:100%;height:auto;margin:auto;object-fit:contain}
-.content{text-align:center;padding:5px 25px 0}
-h1{font-size:clamp(25px,6.2vw,34px);line-height:1.16;letter-spacing:-.8px;margin:9px 0 7px;font-weight:850}
-.subtitle{font-size:clamp(15px,3.9vw,19px);font-weight:600;color:#71809a;margin:0}
-.categories{display:flex;justify-content:center;align-items:center;margin:27px auto 28px;max-width:390px}
-.category{flex:1;display:flex;align-items:center;flex-direction:column;gap:8px;font-size:16px;font-weight:750}
-.category+.category{border-left:1px solid #f4d86d}
-.icon-wrap{width:68px;height:68px;border-radius:50%;background:#fff4bf;display:grid;place-items:center}
-.category svg{width:37px;height:37px;stroke:var(--navy);stroke-width:2.3;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.cta-wrap{padding:0 27px}
-.cta{display:block;width:100%;border:0;border-radius:999px;padding:17px 20px 18px;background:linear-gradient(180deg,#ffdf37 0%,#ffd21c 54%,#f5bd00 100%);color:var(--navy);font-size:clamp(25px,6vw,32px);font-weight:850;letter-spacing:-.5px;box-shadow:0 8px 0 #dba900,0 12px 19px rgba(204,155,0,.23),inset 0 3px 5px rgba(255,255,255,.75);text-decoration:none;transition:transform .16s ease,box-shadow .16s ease;cursor:pointer}
-.cta:active{transform:translateY(5px);box-shadow:0 3px 0 #dba900,0 6px 10px rgba(204,155,0,.2),inset 0 3px 5px rgba(255,255,255,.65)}
-.terms{font-size:12px;line-height:1.7;color:#162c4d;margin:27px 24px 0}
-.terms a{color:#1762a4;text-decoration:none}
-@media(min-width:700px){body{background:#f2f5fa}.page{box-shadow:0 0 35px rgba(12,39,78,.08)}}
-@media(max-height:740px){.hero{height:47svh;min-height:300px}.categories{margin:19px auto 22px}.terms{margin-top:22px}}
+:root {
+  --navy:#08285b;
+  --yellow:#ffd21c;
+  --yellow2:#f6bd00;
+  --muted:#667895;
+  --surface:#f6f9ff;
+  --shadow:0 5px 15px rgba(8,40,91,.10);
+}
+
+* {box-sizing:border-box;margin:0;padding:0}
+
+html {scroll-behavior:smooth}
+
+body {
+  font-family:Inter,system-ui,sans-serif;
+  color:var(--navy);
+  background:white;
+  overflow-x:hidden;
+}
+
+button,select {font-family:inherit}
+button {cursor:pointer}
+img {max-width:100%;display:block}
+
+.page {
+  width:100%;
+  max-width:520px;
+  min-height:100svh;
+  margin:auto;
+  background:#f8faff;
+  position:relative;
+  overflow:hidden;
+  padding-bottom:95px;
+}
+
+.hidden {display:none!important}
+
+/* =========================
+   LANDING PAGE
+========================= */
+
+#landing {
+  min-height:100svh;
+  background:#fff;
+  padding-bottom:20px;
+}
+
+.landing-hero {
+  height:49svh;
+  min-height:320px;
+  max-height:510px;
+  position:relative;
+  background-image:url('assets/file_00000000f8c08211aa7c1d09fa1bd747.png');
+  background-size:cover;
+  background-position:center 46%;
+}
+
+.landing-hero:after {
+  content:"";
+  position:absolute;
+  inset:55% 0 0;
+  background:linear-gradient(180deg,transparent,#fff 98%);
+}
+
+.landing-brand {
+  position:relative;
+  z-index:2;
+  width:90%;
+  margin:-3px auto 0;
+  text-align:center;
+}
+
+.landing-brand img {
+  width:100%;
+  max-height:105px;
+  object-fit:contain;
+  margin:auto;
+}
+
+.landing-content {
+  text-align:center;
+  padding:5px 24px;
+}
+
+.landing-content h1 {
+  font-size:clamp(25px,6.2vw,34px);
+  line-height:1.16;
+  letter-spacing:-.8px;
+  margin:9px 0 7px;
+  font-weight:850;
+}
+
+.landing-subtitle {
+  font-size:clamp(14px,3.9vw,18px);
+  font-weight:600;
+  color:#71809a;
+}
+
+.landing-categories {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  max-width:390px;
+  margin:25px auto 28px;
+}
+
+.landing-category {
+  flex:1;
+  display:flex;
+  align-items:center;
+  flex-direction:column;
+  gap:8px;
+  font-size:15px;
+  font-weight:750;
+}
+
+.landing-category+.landing-category {
+  border-left:1px solid #f4d86d;
+}
+
+.landing-icon {
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  background:#fff4bf;
+  display:grid;
+  place-items:center;
+}
+
+.landing-icon svg {
+  width:35px;
+  height:35px;
+  stroke:var(--navy);
+  stroke-width:2.3;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.cta-wrap {padding:0 26px}
+
+.cta {
+  display:block;
+  width:100%;
+  border:0;
+  border-radius:999px;
+  padding:15px 20px 17px;
+  background:linear-gradient(180deg,#ffdf37,#ffd21c 54%,#f5bd00);
+  color:var(--navy);
+  font-size:29px;
+  font-weight:850;
+  box-shadow:0 7px 0 #dba900,0 12px 19px rgba(204,155,0,.23);
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.cta:active {transform:translateY(5px)}
+
+.terms {
+  font-size:11px;
+  line-height:1.7;
+  color:#162c4d;
+  margin:24px 15px 0;
+}
+
+.terms a {color:#1762a4;text-decoration:none}
+
+/* =========================
+   HOME PAGE HEADER + HERO
+========================= */
+
+.home-hero {
+  height:355px;
+  position:relative;
+  background:
+    linear-gradient(110deg,rgba(245,249,255,.98) 0%,rgba(245,249,255,.75) 38%,rgba(255,255,255,0) 75%),
+    url('assets/hero-house.png');
+  background-size:cover;
+  background-position:center;
+  isolation:isolate;
+}
+
+/* Header overlays hero image */
+
+.home-header {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 17px;
+}
+
+.home-logo {
+  width:245px;
+  max-width:66%;
+  height:76px;
+  object-fit:contain;
+  object-position:left center;
+}
+
+.header-actions {
+  display:flex;
+  gap:9px;
+}
+
+.circle-btn {
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  border:none;
+  background:rgba(255,255,255,.88);
+  box-shadow:var(--shadow);
+  display:grid;
+  place-items:center;
+  color:var(--navy);
+  position:relative;
+}
+
+.circle-btn svg {
+  width:22px;
+  height:22px;
+}
+
+.notification-dot {
+  position:absolute;
+  width:9px;
+  height:9px;
+  background:#f02736;
+  border-radius:50%;
+  top:7px;
+  right:8px;
+}
+
+.hero-content {
+  position:absolute;
+  z-index:2;
+  top:126px;
+  left:23px;
+  width:56%;
+}
+
+.hero-content h1 {
+  font-size:clamp(28px,7.2vw,36px);
+  line-height:1.13;
+  letter-spacing:-1.1px;
+  font-weight:850;
+  color:var(--navy);
+}
+
+.hero-content h1 span {color:#f2bd00}
+
+.hero-content p {
+  font-size:13px;
+  line-height:1.5;
+  font-weight:600;
+  margin-top:13px;
+  max-width:230px;
+}
+
+.hero-decoration {
+  color:var(--yellow2);
+  font-size:30px;
+  position:absolute;
+  right:-18px;
+  top:4px;
+  transform:rotate(-20deg);
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-wrap {
+  position:relative;
+  z-index:4;
+  margin:-5px 16px 21px;
+}
+
+.search-box {
+  min-height:65px;
+  border-radius:40px;
+  background:white;
+  border:1px solid #e8edf6;
+  box-shadow:var(--shadow);
+  padding:6px;
+  display:flex;
+  align-items:center;
+}
+
+.search-field {
+  flex:1;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:0 7px;
+}
+
+.search-field svg {
+  width:21px;
+  height:21px;
+  flex-shrink:0;
+}
+
+.search-field select {
+  min-width:0;
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#52617b;
+  font-size:11px;
+}
+
+.search-divider {
+  width:1px;
+  height:38px;
+  background:#e4eaf3;
+}
+
+.search-btn {
+  border:none;
+  border-radius:35px;
+  background:var(--yellow);
+  color:#111;
+  min-width:102px;
+  height:51px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.search-btn svg {width:19px;height:19px}
+
+/* =========================
+   COMMON SECTIONS
+========================= */
+
+.section {
+  padding:0 17px;
+  margin-top:22px;
+}
+
+.section-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+
+.heading-title {
+  font-size:19px;
+  font-weight:850;
+  letter-spacing:-.5px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.heading-title:before {
+  content:"";
+  width:5px;
+  height:24px;
+  border-radius:5px;
+  background:var(--yellow);
+}
+
+.view-all {
+  background:transparent;
+  border:none;
+  color:var(--navy);
+  font-size:12px;
+  font-weight:750;
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+
+.view-all span {
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#e8f1ff;
+  font-size:17px;
+}
+
+/* =========================
+   FOUR CATEGORIES
+========================= */
+
+.categories {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+}
+
+.category-card {
+  height:111px;
+  min-width:0;
+  border-radius:19px;
+  border:1px solid #edf1f9;
+  background:linear-gradient(145deg,#fff,#f8faff);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:6px 2px;
+  color:var(--navy);
+}
+
+.category-card svg {
+  width:39px;
+  height:39px;
+  stroke:#0752ae;
+  stroke-width:2.1;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.category-card:nth-child(1) svg,
+.category-card:nth-child(4) svg {color:#e9b400}
+
+.category-card p {
+  font-size:11px;
+  line-height:1.35;
+  font-weight:650;
+  text-align:center;
+}
+
+/* =========================
+   FEATURED LISTING
+========================= */
+
+.listing-card {
+  display:grid;
+  grid-template-columns:43% 57%;
+  background:white;
+  border-radius:22px;
+  overflow:hidden;
+  border:1px solid #edf1f9;
+  box-shadow:var(--shadow);
+}
+
+.listing-image {
+  min-height:190px;
+  position:relative;
+  overflow:hidden;
+}
+
+.listing-image img {
+  width:100%;
+  height:100%;
+  min-height:190px;
+  object-fit:cover;
+}
+
+.rent-badge {
+  position:absolute;
+  top:10px;
+  left:9px;
+  padding:6px 12px;
+  background:var(--yellow);
+  color:#111;
+  border-radius:25px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.listing-info {
+  padding:12px 10px;
+  min-width:0;
+}
+
+.listing-top {
+  display:flex;
+  justify-content:space-between;
+  gap:4px;
+}
+
+.listing-top h3 {
+  font-size:14px;
+  line-height:1.4;
+  font-weight:800;
+}
+
+.save-btn {
+  border:0;
+  background:transparent;
+  color:var(--navy);
+  flex-shrink:0;
+}
+
+.save-btn svg {width:21px;height:21px}
+
+.location {
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:11px;
+  margin:7px 0 10px;
+  font-weight:550;
+}
+
+.location svg {width:16px;height:16px;flex-shrink:0}
+
+.property-details {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:5px;
+  font-size:10px;
+  font-weight:600;
+}
+
+.price {
+  font-size:20px;
+  font-weight:850;
+  margin:11px 0;
+}
+
+.price small {font-size:11px;font-weight:500}
+
+.listing-actions {
+  display:flex;
+  gap:5px;
+}
+
+.action-btn {
+  flex:1;
+  border-radius:25px;
+  padding:8px 4px;
+  font-size:10px;
+  font-weight:750;
+  white-space:nowrap;
+}
+
+.contact-btn {
+  background:white;
+  border:1px solid var(--navy);
+  color:var(--navy);
+}
+
+.details-btn {
+  border:0;
+  background:var(--yellow);
+  color:#111;
+}
+
+.dots {
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:8px;
+}
+
+.dots span {
+  width:10px;
+  height:10px;
+  background:#d1d6df;
+  border-radius:50%;
+}
+
+.dots span:first-child {background:var(--yellow)}
+
+/* =========================
+   PEOPLE PROMO CARDS
+========================= */
+
+.promo-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+  padding:0 16px;
+  margin-top:22px;
+}
+
+.promo-card {
+  height:108px;
+  position:relative;
+  overflow:hidden;
+  border-radius:21px;
+  box-shadow:var(--shadow);
+  isolation:isolate;
+  display:flex;
+  align-items:center;
+}
+
+.owner-card {background:#fff0b8}
+.seeker-card {background:#dceaff}
+
+.promo-card img {
+  position:absolute;
+  z-index:-1;
+  left:0;
+  bottom:0;
+  height:100%;
+  width:45%;
+  object-fit:cover;
+  object-position:top center;
+  -webkit-mask-image:linear-gradient(90deg,#000 55%,transparent);
+  mask-image:linear-gradient(90deg,#000 55%,transparent);
+}
+
+.promo-content {
+  margin-left:43%;
+  width:57%;
+  padding:5px 5px 5px 0;
+}
+
+.promo-content h3 {
+  font-size:13px;
+  line-height:1.3;
+  font-weight:850;
+}
+
+.promo-content p {
+  font-size:10px;
+  line-height:1.4;
+  margin-top:6px;
+  font-weight:500;
+}
+
+.promo-arrow {
+  position:absolute;
+  bottom:9px;
+  right:9px;
+  width:25px;
+  height:25px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--navy);
+  color:white;
+  font-size:16px;
+  border:0;
+}
+
+/* =========================
+   WHY CHOOSE
+========================= */
+
+.why-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+}
+
+.why-card {
+  height:91px;
+  border-radius:18px;
+  border:1px solid #eaf0fb;
+  background:linear-gradient(145deg,#edf4ff,#fff);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:5px;
+  text-align:center;
+  padding:5px 2px;
+}
+
+.why-card svg {
+  width:31px;
+  height:31px;
+  color:#074ca4;
+  stroke-width:2.5;
+}
+
+.why-card:nth-child(3) svg {color:#efb800}
+
+.why-card p {
+  font-size:10px;
+  line-height:1.3;
+  font-weight:700;
+}
+
+/* =========================
+   WHATSAPP
+========================= */
+
+.whatsapp {
+  position:fixed;
+  z-index:10;
+  bottom:103px;
+  left:calc(50% + 174px);
+  transform:translateX(-50%);
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  border:4px solid white;
+  background:#13bd62;
+  color:white;
+  display:grid;
+  place-items:center;
+  box-shadow:0 4px 15px #0002;
+}
+
+.whatsapp svg {width:29px;height:29px}
+
+/* =========================
+   BOTTOM NAVIGATION
+========================= */
+
+.bottom-nav {
+  position:fixed;
+  z-index:20;
+  bottom:7px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(96%,500px);
+  height:72px;
+  border-radius:25px;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 -3px 22px rgba(14,40,80,.12);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  align-items:center;
+  padding:3px 5px 7px;
+}
+
+.nav-item {
+  position:relative;
+  height:62px;
+  border:0;
+  background:transparent;
+  color:var(--navy);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  font-size:12px;
+  font-weight:650;
+}
+
+.nav-item svg {width:27px;height:27px;stroke-width:2.4}
+
+.nav-item.active {color:#e8b600}
+
+.nav-item.active svg {
+  fill:#ffc900;
+  stroke:#ffc900;
+}
+
+.nav-item.active:after {
+  content:"";
+  position:absolute;
+  bottom:-2px;
+  width:65%;
+  height:4px;
+  border-radius:5px;
+  background:var(--yellow);
+}
+
+/* =========================
+   MENU DRAWER
+========================= */
+
+.overlay {
+  position:fixed;
+  inset:0;
+  z-index:29;
+  background:rgba(5,20,50,.45);
+  opacity:0;
+  visibility:hidden;
+  transition:.3s;
+}
+
+.overlay.show {opacity:1;visibility:visible}
+
+.drawer {
+  position:fixed;
+  z-index:30;
+  right:-100%;
+  top:0;
+  height:100%;
+  width:min(83%,350px);
+  background:white;
+  padding:22px 19px;
+  box-shadow:-5px 0 25px #0002;
+  transition:.35s;
+  overflow-y:auto;
+}
+
+.drawer.open {right:0}
+
+.drawer-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #edf0f5;
+  padding-bottom:16px;
+}
+
+.drawer-header img {width:190px}
+
+.close-menu {
+  background:#f1f5fc;
+  border:0;
+  color:var(--navy);
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  font-size:23px;
+}
+
+.drawer-title {
+  font-size:11px;
+  color:#8793a9;
+  margin:23px 0 10px;
+  font-weight:700;
+}
+
+.menu-link {
+  width:100%;
+  background:white;
+  border:0;
+  border-bottom:1px solid #edf0f5;
+  color:var(--navy);
+  padding:15px 5px;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  font-size:14px;
+  font-weight:650;
+}
+
+.menu-link svg {width:21px;height:21px}
+
+.login-menu {
+  width:100%;
+  margin-top:20px;
+  padding:13px;
+  border:0;
+  border-radius:30px;
+  background:var(--yellow);
+  color:#111;
+  font-size:15px;
+  font-weight:850;
+}
+
+.menu-ad {
+  margin-top:23px;
+  min-height:125px;
+  border-radius:18px;
+  padding:15px;
+  background:linear-gradient(135deg,#fff0a8,#ffe071);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:7px;
+}
+
+.menu-ad strong {font-size:17px}
+.menu-ad p {font-size:11px;color:#38435b}
+
+.menu-ad button {
+  width:fit-content;
+  background:var(--navy);
+  color:white;
+  border:0;
+  padding:7px 14px;
+  border-radius:20px;
+  font-weight:650;
+  font-size:11px;
+}
+
+.footer {
+  padding:17px 10px;
+  text-align:center;
+  color:#69758b;
+  font-size:10px;
+}
+
+/* =========================
+   SMALL SCREEN ADJUSTMENTS
+========================= */
+
+@media(max-width:370px) {
+  .home-hero {height:330px}
+  .home-logo {width:205px}
+  .hero-content {top:119px;left:19px}
+  .hero-content h1 {font-size:27px}
+  .search-btn {min-width:85px;font-size:11px}
+  .search-field select {font-size:10px}
+  .heading-title {font-size:17px}
+  .category-card p {font-size:10px}
+  .listing-info {padding:10px 7px}
+  .listing-top h3 {font-size:12px}
+  .price {font-size:17px}
+  .action-btn {font-size:9px}
+  .promo-content h3 {font-size:11px}
+  .promo-content p {font-size:9px}
+  .why-card p {font-size:9px}
+  .whatsapp {left:auto;right:15px;transform:none}
+}
+
+@media(min-width:700px) {
+  body {background:#edf2f9}
+  .page {box-shadow:0 0 30px rgba(8,40,91,.08)}
+  .bottom-nav {width:490px}
+}
 </style>
 </head>
+
 <body>
-<main class="page">
-  <section class="hero" aria-label="Rentspot rental illustration"></section>
-  <div class="brand"><img src="assets/1000283253-removebg-preview.png" alt="Rentspot — Find, Rent, Live Better"></div>
-  <section class="content">
+
+<!-- =================================
+     PAGE 1: LANDING PAGE
+================================= -->
+
+<main id="landing">
+
+  <section class="landing-hero"></section>
+
+  <div class="landing-brand">
+    <img src="assets/1000283253-removebg-preview.png"
+         alt="RentSpot - Find Rent Live Better">
+  </div>
+
+  <section class="landing-content">
+
     <h1>Find Your Perfect Space</h1>
-    <p class="subtitle">Rent homes, offices and more — easily!</p>
-    <div class="categories">
-      <div class="category"><div class="icon-wrap"><svg viewBox="0 0 48 48"><path d="M6 22 24 7l18 15M11 19v22h26V19M20 41V27h8v14"/></svg></div><span>Homes</span></div>
-      <div class="category"><div class="icon-wrap"><svg viewBox="0 0 48 48"><rect x="9" y="7" width="30" height="34" rx="2"/><path d="M16 14h4m8 0h4M16 22h4m8 0h4M16 30h4m8 0h4M21 41V35h6v6"/></svg></div><span>Offices</span></div>
-      <div class="category"><div class="icon-wrap"><svg viewBox="0 0 48 48"><path d="M6 19h36l-3-10H9L6 19ZM9 19v22h30V19M6 19c0 5 8 5 8 0 0 5 8 5 8 0 0 5 8 5 8 0 0 5 8 5 8 0M18 41V28h12v13"/></svg></div><span>Shops</span></div>
+
+    <p class="landing-subtitle">
+      Rent homes, offices and more — easily!
+    </p>
+
+    <div class="landing-categories">
+
+      <div class="landing-category">
+        <div class="landing-icon">
+          <svg viewBox="0 0 48 48">
+            <path d="M6 22 24 7l18 15M11 19v22h26V19M20 41V27h8v14"/>
+          </svg>
+        </div>
+        <span>Homes</span>
+      </div>
+
+      <div class="landing-category">
+        <div class="landing-icon">
+          <svg viewBox="0 0 48 48">
+            <rect x="9" y="7" width="30" height="34" rx="2"/>
+            <path d="M16 14h4m8 0h4M16 22h4m8 0h4M16 30h4m8 0h4M21 41V35h6v6"/>
+          </svg>
+        </div>
+        <span>Offices</span>
+      </div>
+
+      <div class="landing-category">
+        <div class="landing-icon">
+          <svg viewBox="0 0 48 48">
+            <path d="M6 19h36l-3-10H9L6 19ZM9 19v22h30V19M6 19c0 5 8 5 8 0 0 5 8 5 8 0 0 5 8 5 8 0 0 5 8 5 8 0M18 41V28h12v13"/>
+          </svg>
+        </div>
+        <span>Shops</span>
+      </div>
+
     </div>
-    <div class="cta-wrap"><a class="cta" href="coming-soon.html">Let’s Go</a></div>
-    <p class="terms">By continuing, you agree to our <a href="#" onclick="return false">Terms and Conditions</a> and <a href="#" onclick="return false">Privacy Policy</a>.<br>By continuing, you agree to be contacted by us and our authorized representatives.</p>
+
+    <div class="cta-wrap">
+      <button class="cta" onclick="openHome()">Let's Go</button>
+    </div>
+
+    <p class="terms">
+      By continuing, you agree to our
+      <a href="terms.html">Terms and Conditions</a> and
+      <a href="privacy.html">Privacy Policy</a>.<br>
+      By continuing, you agree to be contacted by us and our authorized representatives.
+    </p>
+
   </section>
 </main>
+
+
+<!-- =================================
+     PAGE 2: HOME PAGE
+================================= -->
+
+<main id="home" class="page hidden">
+
+  <!-- HERO WITH OVERLAY HEADER -->
+
+  <section class="home-hero">
+
+    <header class="home-header">
+
+      <img class="home-logo"
+           src="assets/1000283253-removebg-preview.png"
+           alt="RentSpot">
+
+      <div class="header-actions">
+
+        <button class="circle-btn" onclick="alert('No new notifications')" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+            <path d="M10 21h4"/>
+          </svg>
+          <span class="notification-dot"></span>
+        </button>
+
+        <button class="circle-btn" onclick="openMenu()" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+
+      </div>
+    </header>
+
+    <div class="hero-content">
+      <h1>
+        Find Your<br>
+        Perfect<br>
+        <span>Rental</span> Space
+      </h1>
+
+      <div class="hero-decoration">〃</div>
+
+      <p>Discover homes, rooms and commercial properties near you.</p>
+    </div>
+
+  </section>
+
+
+  <!-- SEARCH -->
+
+  <div class="search-wrap">
+    <div class="search-box">
+
+      <div class="search-field">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2a8 8 0 0 0-8 8c0 5.5 8 13 8 13s8-7.5 8-13a8 8 0 0 0-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+        </svg>
+
+        <select id="location">
+          <option value="">Select Location</option>
+          <option>Proddatur</option>
+          <option>Kadapa</option>
+          <option>Badvel</option>
+          <option>Pulivendla</option>
+          <option>Jammalamadugu</option>
+          <option>Mydukur</option>
+          <option>Kamalapuram</option>
+        </select>
+      </div>
+
+      <div class="search-divider"></div>
+
+      <div class="search-field">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 10 12 3l9 7v11h-6v-7H9v7H3z"/>
+        </svg>
+
+        <select id="propertyType">
+          <option value="">Property Type</option>
+          <option>Houses for Rent</option>
+          <option>Rooms for Rent</option>
+          <option>Apartments</option>
+          <option>Shops for Rent</option>
+          <option>Office Spaces</option>
+          <option>Land</option>
+        </select>
+      </div>
+
+      <button class="search-btn" onclick="searchProperties()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8">
+          <circle cx="10.5" cy="10.5" r="6.5"/>
+          <path d="m16 16 5 5"/>
+        </svg>
+        Search
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- CATEGORIES -->
+
+  <section class="section">
+
+    <div class="section-heading">
+      <h2 class="heading-title">Browse Categories</h2>
+      <button class="view-all" onclick="showPage('listings.html')">
+        View All <span>➜</span>
+      </button>
+    </div>
+
+    <div class="categories">
+
+      <button class="category-card" onclick="filterCategory('Houses for Rent')">
+        <svg viewBox="0 0 48 48">
+          <path d="M4 22 24 5l20 17M9 19v24h30V19M19 43V28h10v15"/>
+        </svg>
+        <p>Houses<br>for Rent</p>
+      </button>
+
+      <button class="category-card" onclick="filterCategory('Rooms for Rent')">
+        <svg viewBox="0 0 48 48">
+          <path d="M5 26V11h5v12h10V17h17a5 5 0 0 1 5 5v15h-5v-6H10v6H5z"/>
+          <circle cx="15" cy="15" r="5"/>
+        </svg>
+        <p>Rooms<br>for Rent</p>
+      </button>
+
+      <button class="category-card" onclick="filterCategory('Apartments')">
+        <svg viewBox="0 0 48 48">
+          <rect x="12" y="4" width="25" height="40" rx="2"/>
+          <path d="M18 11h4m6 0h4M18 19h4m6 0h4M18 27h4m6 0h4M21 44V35h8v9"/>
+        </svg>
+        <p>Apartments</p>
+      </button>
+
+      <button class="category-card" onclick="filterCategory('Shops for Rent')">
+        <svg viewBox="0 0 48 48">
+          <path d="M5 18h38l-4-12H9zM9 18v25h30V18M5 18c0 6 9 6 9 0 0 6 9 6 9 0 0 6 9 6 9 0 0 6 7 6 7 0M18 43V29h12v14"/>
+        </svg>
+        <p>Shops<br>for Rent</p>
+      </button>
+
+    </div>
+  </section>
+
+
+  <!-- FEATURED LISTINGS -->
+
+  <section class="section">
+
+    <div class="section-heading">
+      <h2 class="heading-title">Featured Listings</h2>
+      <button class="view-all" onclick="showPage('listings.html')">
+        View All <span>➜</span>
+      </button>
+    </div>
+
+    <div class="listing-card">
+
+      <div class="listing-image">
+        <img src="assets/listing-house.jpg" alt="Independent house">
+        <span class="rent-badge">For Rent</span>
+      </div>
+
+      <div class="listing-info">
+
+        <div class="listing-top">
+          <h3>2 BHK Independent House</h3>
+
+          <button class="save-btn" onclick="toggleSave(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+              <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/>
+            </svg>
+          </button>
+        </div>
+
+        <p class="location">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2a8 8 0 0 0-8 8c0 5.5 8 13 8 13s8-7.5 8-13a8 8 0 0 0-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+          </svg>
+          Proddatur, Kadapa
+        </p>
+
+        <div class="property-details">
+          <span>▣ 2 Beds</span>
+          <span>♧ 2 Baths</span>
+          <span>▤ 1200 Sq.Ft</span>
+        </div>
+
+        <div class="price">₹12,000 <small>/ Month</small></div>
+
+        <div class="listing-actions">
+          <button class="action-btn contact-btn" onclick="contactOwner()">☎ Contact</button>
+          <button class="action-btn details-btn" onclick="showPage('property-details.html')">◉ Details</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="dots"><span></span><span></span><span></span></div>
+
+  </section>
+
+
+  <!-- OWNER AND SEEKER -->
+
+  <div class="promo-grid">
+
+    <div class="promo-card owner-card">
+      <img src="assets/property-owner.png" alt="Property owner">
+      <div class="promo-content">
+        <h3>For<br>Property Owners</h3>
+        <p>List your property<br>for free</p>
+      </div>
+      <button class="promo-arrow" onclick="showPage('owner-register.html')">➜</button>
+    </div>
+
+    <div class="promo-card seeker-card">
+      <img src="assets/rental-seeker.png" alt="Rental seeker">
+      <div class="promo-content">
+        <h3>For<br>Rental Seekers</h3>
+        <p>Find your dream<br>rental home</p>
+      </div>
+      <button class="promo-arrow" onclick="showPage('listings.html')">➜</button>
+    </div>
+
+  </div>
+
+
+  <!-- WHY CHOOSE -->
+
+  <section class="section">
+
+    <div class="section-heading">
+      <h2 class="heading-title">Why Choose RentSpot?</h2>
+    </div>
+
+    <div class="why-grid">
+
+      <div class="why-card">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2 3 6v6c0 5.5 3.8 9.5 9 11 5.2-1.5 9-5.5 9-11V6z"/>
+          <path d="m8 12 3 3 5-6" fill="none" stroke="white" stroke-width="2"/>
+        </svg>
+        <p>Verified<br>Listings</p>
+      </div>
+
+      <div class="why-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="m3 11 8 8a3 3 0 0 0 4-4l-8-8"/>
+          <path d="m13 5 6-2 3 3-2 6-5 5"/>
+          <path d="m3 7 4-4 5 5-4 4z"/>
+        </svg>
+        <p>Trusted<br>Owners</p>
+      </div>
+
+      <div class="why-card">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="m13 2-9 12h7l-1 8 10-13h-7z"/>
+        </svg>
+        <p>Easy<br>Search</p>
+      </div>
+
+      <div class="why-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 13v-3a9 9 0 0 1 18 0v3"/>
+          <rect x="2" y="12" width="5" height="8" rx="2"/>
+          <rect x="17" y="12" width="5" height="8" rx="2"/>
+          <path d="M19 20c-1 2-3 2-6 2"/>
+        </svg>
+        <p>24/7<br>Support</p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    © 2026 RentSpot. All Rights Reserved.
+  </footer>
+
+
+  <!-- WHATSAPP -->
+
+  <button class="whatsapp" onclick="contactWhatsApp()" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20.5 11.5a8.5 8.5 0 0 1-12.7 7.4L3 20l1.2-4.5A8.5 8.5 0 1 1 20.5 11.5z"/>
+      <path d="M8 8c1 4 4 7 8 8l1-2-3-2-1 1c-1-.5-2-1.5-2.5-2.5l1-1-2-3z"/>
+    </svg>
+  </button>
+
+
+  <!-- BOTTOM NAVIGATION -->
+
+  <nav class="bottom-nav">
+
+    <button class="nav-item active" onclick="activateNav(this,'home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="m3 10 9-7 9 7"/>
+        <path d="M5 9v12h14V9M9 21v-7h6v7"/>
+      </svg>
+      Home
+    </button>
+
+    <button class="nav-item" onclick="activateNav(this,'listings.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Listings
+    </button>
+
+    <button class="nav-item" onclick="activateNav(this,'saved.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/>
+      </svg>
+      Saved
+    </button>
+
+    <button class="nav-item" onclick="activateNav(this,'profile.html')">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="12" cy="7" r="5"/>
+        <path d="M3 21a9 9 0 0 1 18 0z"/>
+      </svg>
+      Profile
+    </button>
+
+  </nav>
+
+
+  <!-- MENU OVERLAY -->
+
+  <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+  <!-- SLIDE MENU -->
+
+  <aside class="drawer" id="drawer">
+
+    <div class="drawer-header">
+      <img src="assets/1000283253-removebg-preview.png" alt="RentSpot">
+      <button class="close-menu" onclick="closeMenu()">×</button>
+    </div>
+
+    <p class="drawer-title">EXPLORE RENTSPOT</p>
+
+    <button class="menu-link" onclick="menuNavigate('index.html')">
+      <span>⌂</span> Home
+    </button>
+
+    <button class="menu-link" onclick="menuNavigate('about.html')">
+      <span>ⓘ</span> About Us
+    </button>
+
+    <button class="menu-link" onclick="menuNavigate('services.html')">
+      <span>▦</span> All Services
+    </button>
+
+    <button class="menu-link" onclick="menuNavigate('contact.html')">
+      <span>✉</span> Contact Us
+    </button>
+
+    <button class="menu-link" onclick="menuNavigate('listings.html')">
+      <span>⌂</span> Property Listings
+    </button>
+
+    <button class="menu-link" onclick="menuNavigate('owner-register.html')">
+      <span>♧</span> For Property Owners
+    </button>
+
+    <button class="login-menu" onclick="menuNavigate('login.html')">
+      Login / Sign Up →
+    </button>
+
+    <div class="menu-ad">
+      <strong>Advertise With RentSpot!</strong>
+      <p>Promote your business and reach local customers.</p>
+      <button onclick="menuNavigate('advertise.html')">Know More →</button>
+    </div>
+
+    <div class="footer">
+      © 2026 RentSpot. All Rights Reserved.
+    </div>
+
+  </aside>
+
+</main>
+
+
+<script>
+
+/* =========================
+   LANDING TO HOME
+========================= */
+
+function openHome() {
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('home').classList.remove('hidden');
+
+  window.scrollTo({top:0,behavior:'instant'});
+
+  history.pushState({page:'home'},'', '#home');
+}
+
+/* Browser back button */
+
+window.addEventListener('popstate', function() {
+  if(location.hash !== '#home') {
+    document.getElementById('home').classList.add('hidden');
+    document.getElementById('landing').classList.remove('hidden');
+    closeMenu();
+  }
+});
+
+
+/* =========================
+   MENU
+========================= */
+
+function openMenu() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+
+function closeMenu() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+function menuNavigate(page) {
+  closeMenu();
+  showPage(page);
+}
+
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+function showPage(page) {
+  if(page === 'index.html' || page === 'home') {
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+
+  window.location.href=page;
+}
+
+function activateNav(button,page) {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.remove('active');
+  });
+
+  button.classList.add('active');
+
+  if(page !== 'home') {
+    showPage(page);
+  } else {
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchProperties() {
+  const location=document.getElementById('location').value;
+  const type=document.getElementById('propertyType').value;
+
+  const params=new URLSearchParams();
+
+  if(location) params.set('location',location);
+  if(type) params.set('type',type);
+
+  window.location.href='listings.html?'+params.toString();
+}
+
+function filterCategory(category) {
+  window.location.href='listings.html?type='+encodeURIComponent(category);
+}
+
+
+/* =========================
+   SAVE PROPERTY
+========================= */
+
+function toggleSave(button) {
+  const saved=button.dataset.saved==='true';
+  button.dataset.saved=String(!saved);
+
+  const path=button.querySelector('path');
+
+  if(!saved) {
+    path.setAttribute('fill','#ffc900');
+  } else {
+    path.setAttribute('fill','none');
+  }
+}
+/* =========================
+   CONTACT
+========================= */
+
+// Replace with actual contact numbers.
+
+function contactOwner() {
+  window.open('https://wa.me/919000000000','_blank');
+}
+
+function contactWhatsApp() {
+  window.open('https://wa.me/919000000000','_blank');
+}
+
+</script>
+
 </body>
 </html>
